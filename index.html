@@ -39,8 +39,8 @@
     background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: white;
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
-  .tab-content, .result-content { display: none; }
-  .tab-content.active, .result-content.active { display: block; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
   .promo-content img { width: 100%; border-radius: 10px; }
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
@@ -64,7 +64,10 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease;
   }
-  .results-area {
+  
+  /* --- ✅ 2x2 그리드 및 여백 적용 --- */
+  .result-content { display: none; }
+  .result-content.active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -88,7 +91,7 @@
   
   @media (max-width: 900px) {
     .calculator-wrapper { flex-direction: column; }
-    .input-grid, .results-area { grid-template-columns: 1fr; }
+    .input-grid, .result-content.active { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -157,8 +160,8 @@
         </div>
       </div>
       <div class="results-column">
-        <div id="resultCpi" class="result-content active results-area"></div>
-        <div id="resultRam" class="result-content results-area"></div>
+        <div id="resultCpi" class="result-content active"></div>
+        <div id="resultRam" class="result-content"></div>
       </div>
     </div>
   </div>
