@@ -156,8 +156,8 @@
         </div>
       </div>
       <div class="results-column">
-        <div id="resultCpi" class="result-content active"></div>
-        <div id="resultRam" class="result-content"></div>
+        <div id="resultCpi" class="result-content active results-area"></div>
+        <div id="resultRam" class="result-content results-area"></div>
       </div>
     </div>
   </div>
@@ -174,14 +174,14 @@ document.addEventListener("DOMContentLoaded", function () {
       tabButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
       
-      tabContents.forEach(content => content.style.display = 'none');
-      resultContents.forEach(content => content.style.display = 'none');
+      tabContents.forEach(content => content.classList.remove('active'));
+      resultContents.forEach(content => content.classList.remove('active'));
       
       const targetTab = document.getElementById(target + 'Tab');
-      if(targetTab) targetTab.style.display = 'block';
+      if(targetTab) targetTab.classList.add('active');
 
       const targetResult = document.getElementById('result' + target.charAt(0).toUpperCase() + target.slice(1));
-      if(targetResult) targetResult.style.display = 'grid';
+      if(targetResult) targetResult.classList.add('active');
     });
   });
 
@@ -283,6 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
     else if (initialInvest > 0) earliestDate = initialDate;
     else earliestDate = additionalDate;
 
+    // --- '오늘 기준' 현황 계산 ---
     const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000 * 60 * 60 * 24)));
     let todayCPI = 0, todayAccumulated = 0, todayReinvestedAmount = 0, todayReinvestCount = 0;
     for (let day = 0; day <= daysPassedSinceStart; day++) {
@@ -290,16 +291,20 @@ document.addEventListener("DOMContentLoaded", function () {
         currentDate.setDate(earliestDate.getDate() + day);
         if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) todayCPI += initialInvest;
         if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
+        
         const dailyInterestFromCPI = todayCPI * dailyYieldRate;
         const dailyInterestFromBonus = (additionalInvest > 0 && currentDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
         todayAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+        
         if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
             todayCPI += todayAccumulated; todayReinvestedAmount += todayAccumulated; todayReinvestCount++; todayAccumulated = 0;
         }
     }
     const daysToNextReinvestCycle = reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays;
 
-    let simCPI = todayCPI, simAccumulated = todayAccumulated;
+    // --- 성장 목표 예측 계산 ---
+    let simCPI = todayCPI;
+    let simAccumulated = todayAccumulated;
     let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
 
     if (todayCPI >= totalPrincipal * 4) {
@@ -314,9 +319,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if(daysTo4x !== "미달성" && daysTo4x !== "달성 완료") break;
         let futureDate = new Date(today);
         futureDate.setDate(today.getDate() + day);
+        
         const dailyInterestFromCPI = simCPI * dailyYieldRate;
         const dailyInterestFromBonus = (additionalInvest > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
         simAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+
         if ((daysPassedSinceStart + day + 1) % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
             simCPI += simAccumulated; simAccumulated = 0;
         }
