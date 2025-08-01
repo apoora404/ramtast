@@ -27,8 +27,6 @@
     background: #120c24;
     padding: 20px;
     border-radius: 15px;
-    display: flex; /* Flexbox for centering */
-    align-items: flex-start; /* Align items to the top */
   }
   .tabs { display: flex; margin-bottom: 25px; }
   .tab-button {
@@ -41,9 +39,8 @@
     background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: white;
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
-  .tab-content, .result-content { display: none; width: 100%; }
+  .tab-content, .result-content { display: none; }
   .tab-content.active, .result-content.active { display: block; }
-  
   .promo-content img {
     width: 100%;
     height: auto;
@@ -51,6 +48,7 @@
     object-fit: contain; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
     border-radius: 10px;
   }
+  
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
   h2 {
@@ -73,11 +71,12 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease;
   }
-  .result-content.active.results-area {
+  .result-content.active {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
+  #promoResult.active { display: block; } /* 프로모션 탭은 그리드 아님 */
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
     font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
@@ -97,7 +96,7 @@
   
   @media (max-width: 900px) {
     .calculator-wrapper { flex-direction: column; }
-    .input-grid, .result-content.active.results-area { grid-template-columns: 1fr; }
+    .input-grid, .result-content.active { grid-template-columns: 1fr; }
   }
 </style>
 </head>
