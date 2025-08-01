@@ -40,7 +40,7 @@
     box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
   }
   .tab-content, .result-content { display: none; }
-  .tab-content.active { display: block; }
+  .tab-content.active, .result-content.active { display: block; }
   
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
@@ -69,9 +69,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
-  #promoResult.active {
-    display: block;
-  }
+  #promoResult.active { display: block; } /* 프로모션 탭은 그리드 아님 */
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
     font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
@@ -181,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
       
       if (target === 'promo') {
         document.getElementById('promoResult').classList.add('active');
-        document.getElementById('cpiTab').classList.add('active'); // 기본 입력창으로 CPI 표시
+        document.getElementById('cpiTab').classList.add('active'); 
       } else {
         document.getElementById(target + 'Tab').classList.add('active');
         const resultId = 'result' + target.charAt(0).toUpperCase() + target.slice(1);
@@ -275,7 +273,116 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.calculateCpiGrowth = function() {
-    // ... CPI Logic from previous turn ...
+    const initialInvest = parseFloat(document.getElementById("initialInvest").value) || 0;
+    const iMonth = document.getElementById("cpiInitialMonth").value, iDay = document.getElementById("cpiInitialDay").value;
+    const initialDate = new Date(`2025-${iMonth}-${iDay}`);
+    const additionalInvest = parseFloat(document.getElementById("additionalInvest").value) || 0;
+    const aMonth = document.getElementById("cpiAdditionalMonth").value, aDay = document.getElementById("cpiAdditionalDay").value;
+    const additionalDate = new Date(`2025-${aMonth}-${aDay}`);
+    const applyPromo = document.getElementById("applyCpiPromotion").checked;
+    const resultCpiDiv = document.getElementById("resultCpi");
+
+    if (!initialInvest && !additionalInvest) { resultCpiDiv.innerHTML = ""; return; }
+    if ((initialInvest > 0 && isNaN(initialDate.getTime())) || (additionalInvest > 0 && isNaN(additionalDate.getTime()))) {
+      resultCpiDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 날짜를 선택해주세요.</div>"; return;
+    }
+    
+    const today = new Date();
+    const totalPrincipal = initialInvest + additionalInvest;
+    const bonusAmount = (applyPromo && additionalInvest >= 1000) ? additionalInvest * 0.10 : 0;
+    const dailyYieldRate = 0.01, promoDailyYieldRate = 0.02, reinvestCycleDays = 7, minReinvestAmount = 50;
+
+    let earliestDate;
+    if (initialInvest > 0 && additionalInvest > 0) earliestDate = new Date(Math.min(initialDate, additionalDate));
+    else if (initialInvest > 0) earliestDate = initialDate;
+    else earliestDate = additionalDate;
+
+    // --- '오늘 기준' 현황 계산 ---
+    const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000 * 60 * 60 * 24)));
+    let todayCPI = 0, todayAccumulated = 0, todayReinvestedAmount = 0, todayReinvestCount = 0;
+    let totalBonusInterestReleased = 0;
+    for (let day = 0; day <= daysPassedSinceStart; day++) {
+        let currentDate = new Date(earliestDate);
+        currentDate.setDate(earliestDate.getDate() + day);
+        if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) todayCPI += initialInvest;
+        if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
+        
+        const dailyInterestFromCPI = todayCPI * dailyYieldRate;
+        let dailyInterestFromBonus = 0;
+        if (bonusAmount > 0 && currentDate >= additionalDate) {
+            dailyInterestFromBonus = bonusAmount * promoDailyYieldRate;
+            totalBonusInterestReleased += dailyInterestFromBonus;
+        }
+        todayAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+
+        if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
+            todayCPI += todayAccumulated; todayReinvestedAmount += todayAccumulated; todayReinvestCount++; todayAccumulated = 0;
+        }
+    }
+    const daysToNextReinvestCycle = reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays;
+    const dailyBonusInterestToday = (bonusAmount > 0 && today >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+    const currentTotalDailyInterest = (todayCPI * dailyYieldRate) + dailyBonusInterestToday;
+
+    // --- 성장 목표 예측 계산 ---
+    let simCPI = todayCPI;
+    let simAccumulated = todayAccumulated;
+    let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
+
+    if (todayCPI >= totalPrincipal * 4) {
+        daysTo2x = "달성 완료"; daysTo3x = "달성 완료"; daysTo4x = "달성 완료";
+    } else if (todayCPI >= totalPrincipal * 3) {
+        daysTo2x = "달성 완료"; daysTo3x = "달성 완료";
+    } else if (todayCPI >= totalPrincipal * 2) {
+        daysTo2x = "달성 완료";
+    }
+
+    for (let day = 1; day <= 365 * 10; day++) {
+        if(daysTo4x !== "미달성" && daysTo4x !== "달성 완료") break;
+        let futureDate = new Date(today);
+        futureDate.setDate(today.getDate() + day);
+        
+        const dailyInterestFromCPI = simCPI * dailyYieldRate;
+        const dailyInterestFromBonus = (additionalInvest > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+        simAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+
+        if ((daysPassedSinceStart + day + 1) % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
+            simCPI += simAccumulated; simAccumulated = 0;
+        }
+        if (daysTo2x === "미달성" && simCPI >= totalPrincipal * 2) daysTo2x = day;
+        if (daysTo3x === "미달성" && simCPI >= totalPrincipal * 3) daysTo3x = day;
+        if (daysTo4x === "미달성" && simCPI >= totalPrincipal * 4) { daysTo4x = day; break; }
+    }
+    
+    resultCpiDiv.innerHTML = `
+      <div class='result-section cpi-main-box'>
+        <div class='result-title'>[내가 스테이킹한 CPI]</div>
+        <div class='result-item'>기존 입금액: <span class='highlight'>${initialInvest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>추가 입금액: <span class='highlight'>${additionalInvest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘 기준 총 CPI: <span class='highlight'>${todayCPI.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1일 총 해제량: <span class='highlight'>${currentTotalDailyInterest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1주일 총 해제량: <span class='highlight'>${(currentTotalDailyInterest * 7).toFixed(2)}</span> USDT</div>
+      </div>
+      <div class='result-section cpi-bonus-box'>
+        <div class='result-title'>[프로모션 보너스 USDL]</div>
+        <div class='result-item'>보너스 USDL 금액: <span class='highlight'>${bonusAmount.toFixed(2)}</span> USDT (고정)</div>
+        <div class='result-item'>일일 해제량: <span class='highlight'>${dailyBonusInterestToday.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>총 해제된 보너스: <span class='highlight'>${totalBonusInterestReleased.toFixed(2)}</span> USDT</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[My CPI (오늘 기준)]</div>
+        <div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>${daysPassedSinceStart}</span> 일 경과</div>
+        <div class='result-item'>오늘 기준 총 자산 (CPI+보너스): <span class='highlight'>${(todayCPI + bonusAmount).toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
+        <div class='result-item'>다음 재투자까지 쌓인 이자: <span class='highlight'>${todayAccumulated.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[CPI 성장 목표 달성 예측]</div>
+        <div class='result-item'>2배 달성까지: <span class='highlight'>${daysTo2x === "달성 완료" ? "달성 완료" : daysTo2x + " 일 남음"}</span></div>
+        <div class='result-item'>3배 달성까지: <span class='highlight'>${daysTo3x === "달성 완료" ? "달성 완료" : daysTo3x + " 일 남음"}</span></div>
+        <div class='result-item'>4배 달성까지: <span class='highlight'>${daysTo4x === "달성 완료" ? "달성 완료" : daysTo4x + " 일 남음"}</span></div>
+      </div>`;
   };
 });
 </script>
