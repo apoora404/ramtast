@@ -73,12 +73,11 @@
     color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease; text-decoration: none;
   }
-  .result-content.active {
+  .result-content.active.results-area {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
-  #promoResult.active { display: block; }
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title {
     font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
@@ -101,7 +100,7 @@
   
   @media (max-width: 900px) {
     .calculator-wrapper { flex-direction: column; }
-    .input-grid, .result-content.active { grid-template-columns: 1fr; }
+    .input-grid, .result-content.active.results-area { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -116,28 +115,72 @@
           <button class="tab-button" data-tab="promo">프로모션</button>
         </div>
         <div id="cpiTab" class="tab-content active">
+          <h2>CPI 계산기</h2>
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="initialInvest">기존 CPI 입금액 (USDT):</label>
+              <input type="number" id="initialInvest" placeholder="기존 투자금">
+              <label for="cpiInitialMonth">최초 시작일 (2025년):</label>
+              <div class="date-select-group">
+                <select id="cpiInitialMonth"></select><select id="cpiInitialDay"></select>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="additionalInvest">추가 CPI 입금액 (USDT):</label>
+              <input type="number" id="additionalInvest" placeholder="추가 투자금">
+              <label for="cpiAdditionalMonth">추가 입금일 (2025년):</label>
+              <div class="date-select-group">
+                <select id="cpiAdditionalMonth"></select><select id="cpiAdditionalDay"></select>
+              </div>
+            </div>
           </div>
+          <label class="promo-checkbox">
+              <input type="checkbox" id="applyCpiPromotion">
+              <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
+          </label>
+          <button onclick="calculateCpiGrowth()">계산하기</button>
+        </div>
         <div id="ramTab" class="tab-content">
+          <h2>RAM 계산기</h2>
+          <label for="invest">할당 금액 (USDT):</label>
+          <input type="number" id="invest" placeholder="예: 5000">
+          <label for="days">할당 기간 (일):</label>
+          <input type="number" id="days" placeholder="예: 120">
+          <label for="ramStartMonth">스테이킹 시작일 (2025년):</label>
+          <div class="date-select-group">
+            <select id="ramStartMonth"></select><select id="ramStartDay"></select>
           </div>
+          <label for="hash">해시레이트 구간:</label>
+          <select id="hash">
+            <option value="1">1M ~ 5M</option><option value="1.05">5M ~ 8M</option><option value="1.1025">8M ~ 16M</option>
+            <option value="1.157625">16M ~ 25M</option><option value="1.21550625">25M ~ 50M</option><option value="1.27628157">50M+</option>
+          </select>
+          <label class="promo-checkbox">
+              <input type="checkbox" id="applyRamPromotion">
+              <span>RAM 프로모션 적용</span>
+          </label>
+          <button onclick="calculateRam()">계산하기</button>
+        </div>
         <div id="promoTab" class="tab-content promo-text">
           <h3>1. RAM 참여 더블 보너스</h3>
           <ul>
-            <li><strong>프로모션 기간:</strong> 7.17 ~ 12월 31일 하반기 전체 (기간 내 스테이킹만 인정, 소급 불가)</li>
-            <li><strong>참여방법:</strong> RAM스테이킹 단일 예치, 최소 120일 이상, 1000 USDT 이상 예치 시 해당.</li>
-            <li><strong>구간 보너스 안내 (120일 이상 예치 시):</strong>
+            <li><strong>프로모션 기간:</strong> 7.17~12월 31일 하반기 전체 (기간내 스테이킹만 인정, 소급 불가)</li>
+            <li><strong>참여방법 :</strong> RAM스테이킹 단일 예치, 최소 120일 이상, 1000usdt 이상 예치시 해당.</li>
+            <li><strong>구간 보너스 안내(120일이상예치시):</strong>
               <ul>
-                <li>1001~5000 USDT: 보너스 보상율 0.53%, 2400일 상품의 10% RAM 추가 예치</li>
-                <li>5001~10000 USDT: 보너스 보상율 0.578%, 2400일 상품의 15% RAM 추가 예치</li>
-                <li>10001 USDT~: 보너스 보상율 0.693%, 2400일 상품의 20% RAM 추가 예치</li>
+              <li>1001~5000usdt : 보너스 보상율 0.53 / 기간 2400일 짜리의 할당의 10% 램으로 추가 예치</li>
+              <li>5001~10000usdt : 보너스 보상율 0.578 / 기간 2400일 짜리 할당의 15% 램으로 추가 예치</li>
+              <li>10001usdt~ : 보너스 보상율 0.693% / 2400일 짜리 할당의 20% 램으로 추가 예치</li>
               </ul>
             </li>
           </ul>
+
           <h3>2. CPI 스테이킹</h3>
           <ul>
-            <li>CPI 1000 USDT 당 10%의 USDL을 스테이킹 형식으로 드랍해 드립니다.</li>
-            <li><strong>프로모션 기간:</strong> 7.17 ~ 12월 31일 하반기 전체 (기간 내 스테이킹만 인정, 소급 불가)</li>
-            <li><strong>참여방법:</strong> Depin 메뉴에서 CPI 1000 USDT 이상 예치.</li>
-            <li><strong>보상:</strong> 스테이블코인 USDL을 Depin CPI풀에 자동으로 스테이킹. (예: 10,000 USDT 예치 시 1,000 USDT 상당의 USDL 스테이킹)</li>
+            <li>cpi 1000usdt 당 10%의 USDL을 스테이킹 형식으로 드랍해 드립니다.</li>
+            <li><strong>프로모션 기간 :</strong> 7.17~12월 31일 하반기 전체 (기간내 스테이킹만 인정, 소급 불가)</li>
+            <li><strong>참여방법 :</strong> 아래 Depin메뉴에서 CPI 1000USDT 이상 예치.</li>
+            <li><strong>보상 :</strong> 스테이블코인 USDL 을 Depin CPI풀에 자동으로 스테이킹.<br>ex) 10000불 예치시 1000불어치 USDL 스테이킹.</li>
           </ul>
           <a href="https://t.me/sollong_kr/158" target="_blank" class="telegram-link">텔레그램 공지 확인하기</a>
         </div>
@@ -178,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
   function populateDateSelects(monthSelect, daySelect, year) {
     for (let i = 1; i <= 12; i++) monthSelect.add(new Option(`${i}월`, i));
     function updateDays() {
@@ -206,25 +250,32 @@ document.addEventListener("DOMContentLoaded", function () {
     let hashBonus = parseFloat(document.getElementById("hash").value), applyRamPromotion = document.getElementById("applyRamPromotion").checked;
     const resultRamDiv = document.getElementById("resultRam");
     if (!invest || !days) { resultRamDiv.innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요.</div>"; return; }
-    const today = new Date(), startDate = new Date(`2025-${startMonth}-${startDay}`);
-    const diffDays = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24))), remainDays = Math.max(0, days - diffDays);
+    
     const interestPayingDays = Math.max(0, days - 2);
+    const today = new Date(), startDate = new Date(`2025-${startMonth}-${startDay}`);
+    const diffDays = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)));
+    const remainDays = Math.max(0, days - diffDays);
     const interestDaysPassed = Math.max(0, diffDays - 2);
     const remainingInterestDays = Math.max(0, interestPayingDays - interestDaysPassed);
 
-    const dailyInterest_main = invest * getBaseRate(invest) * hashBonus * getDayBonus(days), total_main = dailyInterest_main * days;
+    const dailyInterest_main = invest * getBaseRate(invest) * hashBonus * getDayBonus(days), total_main = dailyInterest_main * interestPayingDays;
     const recoveryDays_main = invest > 0 ? invest / dailyInterest_main : 0;
-    const total_main_received_so_far = dailyInterest_main * diffDays, total_main_remaining_until_maturity = dailyInterest_main * remainDays;
+    const total_main_received_so_far = dailyInterest_main * interestDaysPassed;
+    const total_main_remaining_until_maturity = dailyInterest_main * remainingInterestDays;
+    
     let bonusRAM = 0, dailyInterest_bonus = 0, bonus_interest_until_maturity = 0, bonus_interest_remaining = 0;
     if (applyRamPromotion && invest >= 1000 && days >= 120) {
         bonusRAM = getBonusRAM(invest, days); dailyInterest_bonus = bonusRAM * getBonusRate(invest) * hashBonus * 1.3;
-        bonus_interest_until_maturity = dailyInterest_bonus * days; bonus_interest_remaining = dailyInterest_bonus * Math.max(0, 2400-days);
+        bonus_interest_until_maturity = dailyInterest_bonus * interestPayingDays;
+        bonus_interest_remaining = dailyInterest_bonus * Math.max(0, 2400 - days);
     }
-    const total_combined_received_so_far = (dailyInterest_main + dailyInterest_bonus) * diffDays;
-    const total_combined_remaining_until_maturity = (dailyInterest_main + dailyInterest_bonus) * remainDays;
+    
+    const total_combined_received_so_far = (dailyInterest_main + dailyInterest_bonus) * interestDaysPassed;
+    const total_combined_remaining_until_maturity = (dailyInterest_main + dailyInterest_bonus) * remainingInterestDays;
     const total_until_maturity_combined = total_main + bonus_interest_until_maturity;
     const recoveryDays_total = (invest > 0 && (dailyInterest_main + dailyInterest_bonus) > 0) ? invest / (dailyInterest_main + dailyInterest_bonus) : 0;
-    const alertMsg = (recoveryDays_main > 0 && recoveryDays_main > days) ? "<div class='alert-box alert-warning'>🔔 알림: 만기일이 원금 회수 기간보다 짧습니다.</div>" : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
+    const alertMsg = (recoveryDays_main > 0 && recoveryDays_main > interestPayingDays) ? "<div class='alert-box alert-warning'>🔔 알림: 만기일이 원금 회수 기간보다 짧습니다.</div>" : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
+    
     let dailyWeeklyMonthlyDisplay = "";
     if (remainDays > 0) {
         let daily_total_for_remaining = dailyInterest_main + dailyInterest_bonus;
@@ -237,14 +288,14 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="result-section main-box"><div class="result-title">[내가 구매한 RAM]</div>
         <div class="result-item">투자 금액: <span class="highlight">${invest.toFixed(2)}</span> USDT</div>
         <div class="result-item">일일 이자: <span class="highlight">${dailyInterest_main.toFixed(2)}</span> USDT</div>
-        <div class="result-item">총 이자(${days}일): <span class="highlight">${total_main.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 이자(${interestPayingDays}일): <span class="highlight">${total_main.toFixed(2)}</span> USDT</div>
         <div class="result-item">원금 회수 예상일: <span class="highlight">약 ${Math.ceil(recoveryDays_main)}일</span></div>
         <div class="result-item">현재까지 받은 총 이자: <span class="highlight">${total_main_received_so_far.toFixed(2)}</span> USDT</div>
         <div class="result-item">만기일 까지 남은 총 이자: <span class="highlight">${total_main_remaining_until_maturity.toFixed(2)}</span> USDT</div></div>
       <div class="result-section bonus-box"><div class="result-title">[프로모션 보너스 RAM]</div>
         <div class="result-item">보너스 RAM: <span class="highlight">${bonusRAM.toFixed(2)}</span> USDT</div>
         <div class="result-item">일일 이자: <span class="highlight">${dailyInterest_bonus.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일까지 이자(${days}일): <span class="highlight">${bonus_interest_until_maturity.toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기일까지 이자(${interestPayingDays}일): <span class="highlight">${bonus_interest_until_maturity.toFixed(2)}</span> USDT</div>
         <div class="result-item">남은 기간 이자(${Math.max(0, 2400 - days)}일): <span class="highlight">${bonus_interest_remaining.toFixed(2)}</span> USDT</div></div>
       <div class="result-section total-box"><div class="result-title">[총 합계]</div>
         <div class="result-item">스테이킹 진행: <span class="highlight">${diffDays}일 경과 / ${remainDays}일 남음</span></div>
