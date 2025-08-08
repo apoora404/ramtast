@@ -5,8 +5,13 @@
 <title>Sollong 통합 계산기</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-  body { font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
-    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); color: #e0e6f0; }
+  /* ====== 기본 ====== */
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 30px auto; padding: 0 20px;
+    background: linear-gradient(135deg, #0e0e1e, #1a0f2b);
+    color: #e0e6f0;
+  }
   .container { width: 100%; max-width: 1200px; margin: 0 auto; }
   .card { background: #1e1430; padding: 25px; border-radius: 18px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.6); border: 1px solid #8c7eff33; box-sizing: border-box; }
@@ -20,8 +25,9 @@
   .tab-button:last-child  { border-radius: 0 12px 12px 0; }
   .tab-button.active { background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff;
     box-shadow: 0 3px 10px rgba(140,126,255,0.4); }
-  .tab-content, .result-content { display: none; }
+  .tab-content, .result-content { display: none; } /* 전역은 block 그리드 금지 */
   .tab-content.active, .result-content.active { display: block; }
+
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
   h2 { text-align: center; color: #8c7eff; margin: 10px 0 25px; text-shadow: 0 0 5px rgba(140,126,255,0.5); }
@@ -36,7 +42,7 @@
     background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease; }
 
- 
+  /* 결과 박스 */
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title { font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .result-item { margin: 10px 0; font-size: 16px; line-height: 1.5; word-break: keep-all; }
@@ -48,7 +54,7 @@
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
   .alert-success { background: #1a3a1a; color: #6bff6b; border: 1px solid #4dff4d; }
 
-  /* 복리 전략 레이아웃: 왼쪽(2×2 = 초기 상품) | 오른쪽(재예치 요약) */
+  /* ===== RAM 복리 전략 레이아웃: 왼쪽(2×2 = 초기 상품) | 오른쪽(재예치 요약) ===== */
   #resultCompound.active { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
   #compoundLeft  { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   #compoundRight { display: grid; grid-template-columns: 1fr; gap: 16px; }
@@ -111,7 +117,7 @@
           <button id="btnCompound" type="button">시뮬레이션</button>
         </div>
 
-        <!-- RAM 단일 계산기(비교용) -->
+        <!-- RAM 단일 계산기 -->
         <div id="ramTab" class="tab-content">
           <h2>RAM 계산기</h2>
           <label for="invest">할당 금액 (USDT):</label>
@@ -152,37 +158,42 @@
 </div>
 
 <script>
-(function init() {
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init, { once:true }); return; }
+(function boot() {
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot, { once:true }); return; }
 
-  /* 탭 전환 */
+  /* ===== 탭 전환 (data-tab 키 → #{키}Tab / #result{키}) ===== */
   const tabButtons = document.querySelectorAll('.tab-button');
   const inputContents = document.querySelectorAll('.input-column .tab-content');
   const resultContents = document.querySelectorAll('.results-column .result-content');
   tabButtons.forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const t=btn.dataset.tab;
+      const key = btn.dataset.tab; // 'compound' or 'ram'
       tabButtons.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-      inputContents.forEach(c=>c.classList.remove('active')); resultContents.forEach(c=>c.classList.remove('active'));
-      document.getElementById(t+'Tab').classList.add('active');
-      const resultId='result'+t.charAt(0).toUpperCase()+t.slice(1);
-      const el=document.getElementById(resultId); if(el) el.classList.add('active');
+      inputContents.forEach(v=>v.classList.remove('active')); resultContents.forEach(v=>v.classList.remove('active'));
+      document.getElementById(key+'Tab')?.classList.add('active');
+      document.getElementById('result'+key.charAt(0).toUpperCase()+key.slice(1))?.classList.add('active');
+      if (key === 'compound') { try { simulateCompoundRam(); } catch(e){ console.error(e); } }
     });
   });
 
-  /* 날짜 셀렉트 */
-  function populateDateSelects(monthSelect, daySelect, year) {
-    if (!monthSelect||!daySelect) return;
-    if (monthSelect.options.length===0) for(let i=1;i<=12;i++) monthSelect.add(new Option(`${i}월`, i));
-    function updateDays(){ daySelect.innerHTML=''; const m=parseInt(monthSelect.value,10);
-      const d=isNaN(m)?31:new Date(year,m,0).getDate(); for(let i=1;i<=d;i++) daySelect.add(new Option(`${i}일`,i)); }
-    if (!monthSelect._bound){ monthSelect.addEventListener('change',updateDays); monthSelect._bound=true; }
-    const today=new Date(); monthSelect.value=today.getMonth()+1; updateDays(); daySelect.value=today.getDate();
+  /* ===== 날짜 셀렉트 채우기 ===== */
+  function fillDate(monthSel, daySel, year){
+    if (!monthSel || !daySel) return;
+    if (monthSel.options.length === 0) for(let i=1;i<=12;i++) monthSel.add(new Option(`${i}월`, i));
+    function updateDays(){
+      daySel.innerHTML='';
+      const m = parseInt(monthSel.value,10)||1;
+      const days = new Date(year, m, 0).getDate();
+      for(let d=1; d<=days; d++) daySel.add(new Option(`${d}일`, d));
+    }
+    monthSel.addEventListener('change', updateDays);
+    const today = new Date();
+    monthSel.value = today.getMonth()+1; updateDays(); daySel.value = today.getDate();
   }
-  populateDateSelects(document.getElementById("ramStartMonth"), document.getElementById("ramStartDay"), 2025);
-  populateDateSelects(document.getElementById("compStartMonth"), document.getElementById("compStartDay"), 2025);
+  fillDate(document.getElementById('ramStartMonth'),  document.getElementById('ramStartDay'), 2025);
+  fillDate(document.getElementById('compStartMonth'), document.getElementById('compStartDay'), 2025);
 
-  /* 수식 */
+  /* ===== 공통 수식/테이블 ===== */
   const dayBonusTable = [
     {day:81,bonus:1},{day:161,bonus:1.01},{day:240,bonus:1.02},{day:320,bonus:1.03},{day:401,bonus:1.04},{day:480,bonus:1.05},
     {day:561,bonus:1.06},{day:641,bonus:1.07},{day:720,bonus:1.08},{day:801,bonus:1.09},{day:881,bonus:1.1},{day:960,bonus:1.11},
@@ -198,7 +209,7 @@
   const PROMO_START = new Date('2025-07-17');
   const PROMO_END   = new Date('2025-12-31');
 
-  /* RAM 단일 계산기 (참고용) */
+  /* ===== RAM 단일 계산기(참고/비교용) ===== */
   window.calculateRam = function() {
     const invest = parseFloat(document.getElementById("invest").value)||0;
     const days   = parseInt(document.getElementById("days").value)||0;
@@ -248,6 +259,10 @@
   };
 
   /* ===== RAM 복리 전략 ===== */
+  document.getElementById('btnCompound').addEventListener('click', ()=>{ try{ simulateCompoundRam(); }catch(e){ console.error(e); } });
+
+  function inPromoWindow(date){ return date >= PROMO_START && date <= PROMO_END; }
+
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
@@ -261,14 +276,15 @@
     const horizon   = Math.max(1, parseInt(document.getElementById("compHorizon").value) || 2400);
 
     const startDate = new Date(`2025-${startMonth}-${startDay}`);
+    const leftEl  = document.getElementById("compoundLeft");
+    const rightEl = document.getElementById("compoundRight");
+
     if (!initial || !initDays || isNaN(startDate.getTime())) {
-      document.getElementById("compoundLeft").innerHTML  = "<div class='alert-box alert-warning'>입력값을 확인하세요.</div>";
-      document.getElementById("compoundRight").innerHTML = "";
+      leftEl.innerHTML  = "<div class='alert-box alert-warning'>입력값을 확인하세요.</div>";
+      rightEl.innerHTML = "";
       return;
     }
     if (applyPromoReinvest && newStakeDays < 120) newStakeDays = 120;
-
-    function inPromoWindow(date){ return date >= PROMO_START && date <= PROMO_END; }
 
     // 초기 포지션(초기 상품만 왼쪽에 표시)
     const initPromo = applyPromoInitial && inPromoWindow(startDate) && initial >= 1000 && initDays >= 120;
@@ -276,7 +292,7 @@
     const initBonusAmount = initPromo ? getBonusRAM(initial, initDays): 0;
     const initBonusRate   = initPromo ? getBonusRate(initial)         : 0;
 
-    // ---- 재예치 시뮬레이션 ----
+    // ---- 재예치 시뮬 ----
     let wallet = 0;
     let reinvestedPrincipal = 0;
     let reinvestedBonusPrincipal = 0;
@@ -284,32 +300,23 @@
     let dailyMainNowRe = 0, dailyBonusNowRe = 0;
     let reinvestCount = 0;
 
-    // 보유 포지션: 초기 상품 + 이후 재예치들
     const positions = [{
-      amount: initial,
-      startDayIndex: 0,
-      mainDays: initDays,
-      mainRate: initMainRate,
-      bonusAmount: initBonusAmount,
-      bonusRate: initBonusRate
+      amount: initial, startDayIndex: 0, mainDays: initDays,
+      mainRate: initMainRate, bonusAmount: initBonusAmount, bonusRate: initBonusRate
     }];
 
     for (let day = 0; day < horizon; day++) {
       let dayMainRe = 0, dayBonusRe = 0;
 
-      // 각 포지션에서 오늘 발생 이자
       for (const p of positions) {
         const age = day - p.startDayIndex;
         if (age < 0) continue;
 
-        // 메인 단리: D+2 ~ mainDays-1
         if (age >= 2 && age < p.mainDays) {
           const v = p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
-          // 초기 포지션은 왼쪽 카드에서만 보여주므로 재예치 집계에는 포함하지 않음
           if (p.startDayIndex !== 0) dayMainRe += v;
-          wallet += v; // 지갑에 모음
+          wallet += v;
         }
-        // 보너스 단리: D+2 ~ 2400-1
         if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
           const v = p.bonusAmount * p.bonusRate * hashBonus * 1.3;
           if (p.startDayIndex !== 0) dayBonusRe += v;
@@ -320,11 +327,9 @@
       totalMainInterestRe  += dayMainRe;
       totalBonusInterestRe += dayBonusRe;
 
-      // 재예치: 같은 날에도 threshold 여러 번 충족하면 여러 건 생성
       const subscribeDate = new Date(startDate); subscribeDate.setDate(startDate.getDate() + day);
       while (wallet >= threshold) {
-        const stakeAmt = threshold; // 동일 금액 반복
-        wallet -= threshold;
+        const stakeAmt = threshold; wallet -= threshold;
 
         const promoOk = applyPromoReinvest && inPromoWindow(subscribeDate) && stakeAmt >= 1000 && newStakeDays >= 120;
         const mainRateNew  = promoOk ? getBonusRate(stakeAmt) : getBaseRate(stakeAmt);
@@ -343,10 +348,10 @@
       }
     }
 
-    // 오늘(시뮬레이션 마지막 날) 스냅샷: 재예치 포지션의 1일 이자
+    // 오늘(마지막 인덱스) 1일 이자(재예치만)
     const todayIndex = horizon - 1;
     for (const p of positions) {
-      if (p.startDayIndex === 0) continue; // 초기 제외
+      if (p.startDayIndex === 0) continue;
       const age = todayIndex - p.startDayIndex;
       if (age >= 2 && age < p.mainDays) {
         dailyMainNowRe += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
@@ -417,13 +422,12 @@
       </div>
     `;
 
-    document.getElementById("compoundLeft").innerHTML  = leftHtml;
-    document.getElementById("compoundRight").innerHTML = rightHtml;
+    leftEl.innerHTML  = leftHtml;
+    rightEl.innerHTML = rightHtml;
   };
 
-  // 버튼 바인딩
-  document.getElementById('btnCompound').addEventListener('click', () => { try { simulateCompoundRam(); } catch(e){ console.error(e); } });
-  document.getElementById('btnRam').addEventListener('click', () => { try { calculateRam(); } catch(e){ console.error(e); } });
+  // 페이지 열리자마자 복리 탭 기본 계산 한 번
+  try { simulateCompoundRam(); } catch(e){ console.error(e); }
 })();
 </script>
 </body>
