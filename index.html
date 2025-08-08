@@ -372,7 +372,7 @@
     `;
   };
 
-  // ----- RAM 복리 전략 (RAM 계산기 수식 그대로 + 재예치 이벤트만 추가) -----
+  // ----- RAM 복리 전략 (수식 동일 + '초기/재예치' 분리 표시) -----
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
@@ -397,10 +397,18 @@
     const positions = [];
     let wallet = 0, createdStakes = 0;
 
+    // --- 분리 집계용 변수 ---
+    const initialPrincipal = initial;   // 최초 투자금
+    let reinvestedPrincipal = 0;        // 이자로 재예치한 누적 금액(USDT)
+    let initialBonusPrincipal = 0;      // 최초 예치에서 발생한 보너스 RAM(USDT 기준)
+    let reinvestedBonusPrincipal = 0;   // 재예치에서 발생한 보너스 RAM(USDT 기준)
+
     const initPromo = applyPromoInitial && initial >= 1000 && initDays >= 120;
     const initMainRate   = initPromo ? getBonusRate(initial)         : getBaseRate(initial);
     const initBonusAmount= initPromo ? getBonusRAM(initial,initDays) : 0;
     const initBonusRate  = initPromo ? getBonusRate(initial)         : 0;
+
+    if (initBonusAmount > 0) initialBonusPrincipal += initBonusAmount;
 
     positions.push({
       amount: initial, startDayIndex: 0, mainDays: initDays,
@@ -409,7 +417,6 @@
 
     // 누적 통계
     let totalMainInterest=0, totalBonusInterest=0;
-    let totalPrincipal=0, totalBonusPrincipal=0, promoCount=initPromo?1:0;
 
     // 일 단위 시뮬레이션
     for (let day = 0; day < horizon; day++) {
@@ -419,11 +426,11 @@
         const age = day - p.startDayIndex;
         if (age < 0) continue;
 
-        // RAM 탭 수식 그대로: 메인 이자 D+2부터 mainDays-1까지
+        // 메인 이자: D+2 ~ mainDays-1
         if (age >= 2 && age < p.mainDays) {
           dailyMain += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
         }
-        // 보너스 RAM 이자: D+2부터 2400일까지 (캡)
+        // 보너스 RAM 이자: D+2 ~ 2399 (2400 캡)
         if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
           dailyBonus += p.bonusAmount * p.bonusRate * hashBonus * 1.3;
         }
@@ -446,13 +453,14 @@
           mainRate: mainRateNew, bonusAmount: bonusAmtNew, bonusRate: bonusRateNew, promo: promoOk
         });
         createdStakes++;
-        totalPrincipal += stakeAmt;
-        totalBonusPrincipal += bonusAmtNew;
-        if (promoOk) promoCount++;
+
+        // 분리 집계 업데이트
+        reinvestedPrincipal += stakeAmt;
+        if (bonusAmtNew > 0) reinvestedBonusPrincipal += bonusAmtNew;
       }
     }
 
-    // 최종 스냅샷(현재 기준 1일/1주/1달)
+    // 스냅샷(현재 기준 1일/1주/1달)
     const todayIndex = Math.max(0, horizon - 1);
     let dailyMainNow=0, dailyBonusNow=0, activeMainPositions=0;
     for (const p of positions) {
@@ -467,27 +475,30 @@
     }
     const dailyNow = dailyMainNow + dailyBonusNow;
 
-    // 초기 포지션 원금도 총합에 포함
-    totalPrincipal += initial;
-    totalBonusPrincipal += initBonusAmount;
+    // 총계
+    const totalPrincipal = initialPrincipal + reinvestedPrincipal;
+    const totalBonusPrincipal = initialBonusPrincipal + reinvestedBonusPrincipal;
 
     const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + horizon);
 
-    // 결과: RAM 탭과 동일한 3박스 구조/용어
+    // 결과: RAM 탭과 동일한 3박스 구조 + 초기/재예치 분리
     resultDiv.innerHTML = `
       <div class="result-section main-box">
         <div class="result-title">[내가 구매한 RAM]</div>
-        <div class="result-item">총 투자 금액(복리 포함): <span class="highlight">${totalPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">초기 투자 금액: <span class="highlight">${initialPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">이자로 재예치한 금액(누적): <span class="highlight">${reinvestedPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 투자 금액(초기+재예치): <span class="highlight">${totalPrincipal.toFixed(2)}</span> USDT</div>
         <div class="result-item">현재 기준 1일 이자(메인): <span class="highlight">${dailyMainNow.toFixed(2)}</span> USDT</div>
         <div class="result-item">누적 메인 이자: <span class="highlight">${totalMainInterest.toFixed(2)}</span> USDT</div>
         <div class="result-item">활성 포지션 수(메인): <span class="highlight">${activeMainPositions}</span> 개</div>
       </div>
       <div class="result-section bonus-box">
         <div class="result-title">[프로모션 보너스 RAM]</div>
+        <div class="result-item">초기 보너스 RAM: <span class="highlight">${initialBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">재예치에서 받은 보너스 RAM: <span class="highlight">${reinvestedBonusPrincipal.toFixed(2)}</span> USDT</div>
         <div class="result-item">보너스 RAM 합계: <span class="highlight">${totalBonusPrincipal.toFixed(2)}</span> USDT</div>
         <div class="result-item">현재 기준 1일 이자(보너스): <span class="highlight">${dailyBonusNow.toFixed(2)}</span> USDT</div>
         <div class="result-item">누적 보너스 이자: <span class="highlight">${totalBonusInterest.toFixed(2)}</span> USDT</div>
-        <div class="result-item">프로모션 적용 포지션: <span class="highlight">${promoCount}</span> 개</div>
       </div>
       <div class="result-section total-box">
         <div class="result-title">[총 합계]</div>
