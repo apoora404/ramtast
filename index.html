@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Sollong 통합 계산기</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   body {
     font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
@@ -15,18 +15,10 @@
     box-shadow: 0 8px 20px rgba(0,0,0,0.6);
     border: 1px solid #8c7eff33; box-sizing: border-box;
   }
-  .calculator-wrapper {
-    display: flex;
-    gap: 25px;
-  }
-  .input-column, .results-column {
-    flex: 1;
-    min-width: 0;
-  }
+  .calculator-wrapper { display: flex; gap: 25px; }
+  .input-column, .results-column { flex: 1; min-width: 0; }
   .results-column {
-    background: #120c24;
-    padding: 20px;
-    border-radius: 15px;
+    background: #120c24; padding: 20px; border-radius: 15px;
   }
   .tabs { display: flex; margin-bottom: 25px; }
   .tab-button {
@@ -34,28 +26,20 @@
     color: #c9d2e0; font-size: 17px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
   }
   .tab-button:first-child { border-radius: 12px 0 0 12px; }
-  .tab-button:last-child { border-radius: 0 12px 12px 0; }
+  .tab-button:last-child  { border-radius: 0 12px 12px 0; }
   .tab-button.active {
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: white;
-    box-shadow: 0 3px 10px rgba(140, 126, 255, 0.4);
+    background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff;
+    box-shadow: 0 3px 10px rgba(140,126,255,0.4);
   }
   .tab-content, .result-content { display: none; }
   .tab-content.active, .result-content.active { display: block; }
   .promo-content img {
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    object-fit: contain;
-    border-radius: 10px;
+    width: 100%; height: auto; max-height: 80vh; object-fit: contain; border-radius: 10px;
   }
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
-  h2, h3 {
-    text-align: center; color: #8c7eff;
-    margin-bottom: 25px; text-shadow: 0 0 5px rgba(140, 126, 255, 0.5);
-  }
-  h2 { font-size: 28px; margin-top: 0; }
-  h3 { font-size: 22px; text-align: left; }
+  h2, h3 { text-align: center; color: #8c7eff; margin-bottom: 25px; text-shadow: 0 0 5px rgba(140,126,255,0.5); }
+  h2 { font-size: 28px; margin-top: 0; } h3 { font-size: 22px; text-align: left; }
   label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #c9d2e0; }
   input[type="number"], select {
     width: 100%; padding: 12px 15px; border: 1px solid #8c7eff55;
@@ -70,34 +54,28 @@
   button, .telegram-link {
     display: block; text-align: center; margin-top: 30px; width: 100%; padding: 16px; 
     background: linear-gradient(45deg, #8c7eff, #6a4ef7);
-    color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
+    color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
     cursor: pointer; transition: all 0.3s ease; text-decoration: none;
   }
-  .result-content.active {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
+  .result-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   #promoResult.active { display: block; }
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
-  .result-title {
-    font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
+  .result-title { font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .result-item { margin: 10px 0; font-size: 16px; line-height: 1.5; word-break: keep-all; }
   .highlight { font-weight: bold; font-size: 1.1em; color: #5effc9; }
-  .promo-text ul { padding-left: 20px; }
-  .promo-text li { margin-bottom: 10px; line-height: 1.6; }
+  .promo-text ul { padding-left: 20px; } .promo-text li { margin-bottom: 10px; line-height: 1.6; }
   .main-box, .cpi-main-box { background:#1f1636; border-color: #4e8ef7; }
   .main-box .result-title, .cpi-main-box .result-title { color: #4e8ef7; }
   .bonus-box, .cpi-bonus-box { background:#2a1b42; border-color: #8c63ff; }
   .bonus-box .result-title, .cpi-bonus-box .result-title { color: #8c63ff; }
   .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
   .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
-  .alert-box { padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; margin-bottom: 0px;}
+  .alert-box { padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; margin-bottom: 0; }
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
   .alert-success { background: #1a3a1a; color: #6bff6b; border: 1px solid #4dff4d; }
-  
+  /* 클릭 가림 방지 */
+  .input-column { position: relative; z-index: 2; }
+  .results-column { position: relative; z-index: 1; }
   @media (max-width: 900px) {
     .calculator-wrapper { flex-direction: column; }
     .input-grid, .result-content.active { grid-template-columns: 1fr; }
@@ -122,7 +100,7 @@
           <div class="input-grid">
             <div class="input-group">
               <label for="initialInvest">기존 CPI 입금액 (USDT):</label>
-              <input type="number" id="initialInvest" placeholder="기존 투자금">
+              <input type="number" id="initialInvest" placeholder="기존 투자금" />
               <label for="cpiInitialMonth">최초 시작일 (2025년):</label>
               <div class="date-select-group">
                 <select id="cpiInitialMonth"></select><select id="cpiInitialDay"></select>
@@ -130,7 +108,7 @@
             </div>
             <div class="input-group">
               <label for="additionalInvest">추가 CPI 입금액 (USDT):</label>
-              <input type="number" id="additionalInvest" placeholder="추가 투자금">
+              <input type="number" id="additionalInvest" placeholder="추가 투자금" />
               <label for="cpiAdditionalMonth">추가 입금일 (2025년):</label>
               <div class="date-select-group">
                 <select id="cpiAdditionalMonth"></select><select id="cpiAdditionalDay"></select>
@@ -138,33 +116,37 @@
             </div>
           </div>
           <label class="promo-checkbox">
-              <input type="checkbox" id="applyCpiPromotion">
-              <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
+            <input type="checkbox" id="applyCpiPromotion" />
+            <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
           </label>
-          <button onclick="calculateCpiGrowth()">계산하기</button>
+          <button id="btnCpi" type="button">계산하기</button>
         </div>
 
         <!-- RAM -->
         <div id="ramTab" class="tab-content">
           <h2>RAM 계산기</h2>
           <label for="invest">할당 금액 (USDT):</label>
-          <input type="number" id="invest" placeholder="예: 5000">
+          <input type="number" id="invest" placeholder="예: 5000" />
           <label for="days">할당 기간 (일):</label>
-          <input type="number" id="days" placeholder="예: 120">
+          <input type="number" id="days" placeholder="예: 120" />
           <label for="ramStartMonth">스테이킹 시작일 (2025년):</label>
           <div class="date-select-group">
             <select id="ramStartMonth"></select><select id="ramStartDay"></select>
           </div>
           <label for="hash">해시레이트 구간:</label>
           <select id="hash">
-            <option value="1">1M ~ 5M</option><option value="1.05">5M ~ 8M</option><option value="1.1025">8M ~ 16M</option>
-            <option value="1.157625">16M ~ 25M</option><option value="1.21550625">25M ~ 50M</option><option value="1.27628157">50M+</option>
+            <option value="1">1M ~ 5M</option>
+            <option value="1.05">5M ~ 8M</option>
+            <option value="1.1025">8M ~ 16M</option>
+            <option value="1.157625">16M ~ 25M</option>
+            <option value="1.21550625">25M ~ 50M</option>
+            <option value="1.27628157">50M+</option>
           </select>
           <label class="promo-checkbox">
-              <input type="checkbox" id="applyRamPromotion">
-              <span>RAM 프로모션 적용</span>
+            <input type="checkbox" id="applyRamPromotion" />
+            <span>RAM 프로모션 적용</span>
           </label>
-          <button onclick="calculateRam()">계산하기</button>
+          <button id="btnRam" type="button">계산하기</button>
         </div>
 
         <!-- RAM 복리 전략 -->
@@ -173,10 +155,10 @@
           <div class="input-grid">
             <div class="input-group">
               <label for="compInitial">초기 스테이킹 금액 (USDT):</label>
-              <input type="number" id="compInitial" placeholder="예: 5000">
+              <input type="number" id="compInitial" placeholder="예: 5000" />
 
               <label for="compDays">초기 스테이킹 기간(일):</label>
-              <input type="number" id="compDays" placeholder="예: 120" value="120">
+              <input type="number" id="compDays" placeholder="예: 120" value="120" />
 
               <label for="compStartMonth">시작일 (2025년):</label>
               <div class="date-select-group">
@@ -184,7 +166,7 @@
               </div>
 
               <label class="promo-checkbox">
-                <input type="checkbox" id="applyCompPromoInitial">
+                <input type="checkbox" id="applyCompPromoInitial" />
                 <span>초기 예치에 프로모션 적용</span>
               </label>
             </div>
@@ -201,43 +183,41 @@
               </select>
 
               <label for="compThreshold">재예치 트리거 (USDT):</label>
-              <input type="number" id="compThreshold" placeholder="≥ 1001 권장" value="1001">
+              <input type="number" id="compThreshold" placeholder="≥ 1001 권장" value="1001" />
 
               <label for="compNewDays">재예치 기간(일):</label>
-              <input type="number" id="compNewDays" placeholder="예: 120" value="120">
+              <input type="number" id="compNewDays" placeholder="예: 120" value="120" />
 
               <label class="promo-checkbox">
-                <input type="checkbox" id="applyCompPromoReinvest" checked>
+                <input type="checkbox" id="applyCompPromoReinvest" checked />
                 <span>재예치에 프로모션 적용</span>
               </label>
 
               <label for="compHorizon">시뮬레이션 기간(일):</label>
-              <input type="number" id="compHorizon" placeholder="예: 2400" value="2400">
+              <input type="number" id="compHorizon" placeholder="예: 2400" value="2400" />
             </div>
           </div>
-          <button onclick="simulateCompoundRam()">시뮬레이션</button>
+          <button id="btnCompound" type="button">시뮬레이션</button>
         </div>
 
         <!-- 프로모션 안내 -->
         <div id="promoTab" class="tab-content promo-text">
           <h3>1. RAM 참여 더블 보너스</h3>
           <ul>
-            <li><strong>프로모션 기간:</strong> 7.17~12월 31일 하반기 전체 (기간내 스테이킹만 인정, 소급 불가)</li>
-            <li><strong>참여방법 :</strong> RAM스테이킹 단일 예치, 최소 120일 이상, 1000usdt 이상 예치시 해당.</li>
-            <li><strong>구간 보너스 안내(120일이상예치시):</strong>
+            <li><strong>프로모션 기간:</strong> 7.17~12월 31일 (기간내 스테이킹만 인정, 소급 불가)</li>
+            <li><strong>참여방법:</strong> RAM 단일 예치, 최소 120일, 1000 USDT 이상</li>
+            <li><strong>구간 보너스 안내(120일 이상 예치):</strong>
               <ul>
-              <li>1001~5000usdt : 보너스 보상율 0.53 / 기간 2400일 짜리의 할당의 10% 램으로 추가 예치</li>
-              <li>5001~10000usdt : 보너스 보상율 0.578 / 기간 2400일 짜리 할당의 15% 램으로 추가 예치</li>
-              <li>10001usdt~ : 보너스 보상율 0.693% / 2400일 짜리 할당의 20% 램으로 추가 예치</li>
+                <li>1001~5000: 보상률 0.53% / 2400일 할당의 10% 보너스 RAM</li>
+                <li>5001~10000: 0.578% / 15%</li>
+                <li>10001~: 0.693% / 20%</li>
               </ul>
             </li>
           </ul>
           <h3>2. CPI 스테이킹</h3>
           <ul>
-            <li>cpi 1000usdt 당 10%의 USDL을 스테이킹 형식으로 드랍해 드립니다.</li>
-            <li><strong>프로모션 기간 :</strong> 7.17~12월 31일 하반기 전체 (기간내 스테이킹만 인정, 소급 불가)</li>
-            <li><strong>참여방법 :</strong> 아래 Depin메뉴에서 CPI 1000USDT 이상 예치.</li>
-            <li><strong>보상 :</strong> 스테이블코인 USDL 을 Depin CPI풀에 자동으로 스테이킹.<br>ex) 10000불 예치시 1000불어치 USDL 스테이킹.</li>
+            <li>CPI 1000 USDT당 10% USDL 스테이킹 드랍</li>
+            <li><strong>기간:</strong> 7.17~12월 31일 (소급 불가)</li>
           </ul>
           <a href="https://t.me/sollong_kr/158" target="_blank" class="telegram-link">텔레그램 공지 확인하기</a>
         </div>
@@ -249,7 +229,7 @@
         <div id="resultRam" class="result-content"></div>
         <div id="resultCompound" class="result-content"></div>
         <div id="promoResult" class="result-content promo-content">
-          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내">
+          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내" />
         </div>
       </div>
     </div>
@@ -257,7 +237,14 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+/* 레디스테이트-세이프 초기화 */
+(function init() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+    return;
+  }
+
+  // 탭 전환
   const tabButtons = document.querySelectorAll('.tab-button');
   const inputContents = document.querySelectorAll('.input-column .tab-content');
   const resultContents = document.querySelectorAll('.results-column .result-content');
@@ -265,95 +252,103 @@ document.addEventListener("DOMContentLoaded", function () {
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const target = button.dataset.tab;
-      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabButtons.forEach(b => b.classList.remove('active'));
       button.classList.add('active');
 
-      inputContents.forEach(content => content.classList.remove('active'));
-      resultContents.forEach(content => content.classList.remove('active'));
+      inputContents.forEach(c => c.classList.remove('active'));
+      resultContents.forEach(c => c.classList.remove('active'));
 
       document.getElementById(target + 'Tab').classList.add('active');
-
-      if (target === 'promo') {
-        document.getElementById('promoResult').classList.add('active');
-      } else {
-        const resultId = 'result' + target.charAt(0).toUpperCase() + target.slice(1);
-        document.getElementById(resultId).classList.add('active');
-      }
+      if (target === 'promo') document.getElementById('promoResult').classList.add('active');
+      else document.getElementById('result' + target.charAt(0).toUpperCase() + target.slice(1)).classList.add('active');
     });
   });
 
+  // 날짜 선택 초기화 (방어적)
   function populateDateSelects(monthSelect, daySelect, year) {
-    for (let i = 1; i <= 12; i++) monthSelect.add(new Option(`${i}월`, i));
+    if (!monthSelect || !daySelect) return;
+    if (monthSelect.options.length === 0)
+      for (let i = 1; i <= 12; i++) monthSelect.add(new Option(`${i}월`, i));
     function updateDays() {
       daySelect.innerHTML = '';
-      const daysInMonth = new Date(year, monthSelect.value, 0).getDate();
+      const m = parseInt(monthSelect.value, 10);
+      const daysInMonth = isNaN(m) ? 31 : new Date(year, m, 0).getDate();
       for (let i = 1; i <= daysInMonth; i++) daySelect.add(new Option(`${i}일`, i));
     }
-    monthSelect.addEventListener("change", updateDays);
+    if (!monthSelect._bound) { monthSelect.addEventListener('change', updateDays); monthSelect._bound = true; }
     const today = new Date();
-    monthSelect.value = today.getMonth() + 1; updateDays();
-    daySelect.value = today.getDate();
+    monthSelect.value = today.getMonth() + 1; updateDays(); daySelect.value = today.getDate();
   }
-  // 날짜 셀렉트 초기화
   populateDateSelects(document.getElementById("cpiInitialMonth"), document.getElementById("cpiInitialDay"), 2025);
   populateDateSelects(document.getElementById("cpiAdditionalMonth"), document.getElementById("cpiAdditionalDay"), 2025);
   populateDateSelects(document.getElementById("ramStartMonth"), document.getElementById("ramStartDay"), 2025);
   populateDateSelects(document.getElementById("compStartMonth"), document.getElementById("compStartDay"), 2025);
 
   // 공통 헬퍼
-  const dayBonusTable = [{day:81,bonus:1},{day:161,bonus:1.01},{day:240,bonus:1.02},{day:320,bonus:1.03},{day:401,bonus:1.04},{day:480,bonus:1.05},{day:561,bonus:1.06},{day:641,bonus:1.07},{day:720,bonus:1.08},{day:801,bonus:1.09},{day:881,bonus:1.1},{day:960,bonus:1.11},{day:1041,bonus:1.12},{day:1121,bonus:1.13},{day:1200,bonus:1.14},{day:1281,bonus:1.15},{day:1361,bonus:1.16},{day:1440,bonus:1.17},{day:1521,bonus:1.18},{day:1601,bonus:1.19},{day:1680,bonus:1.2},{day:1761,bonus:1.21},{day:1841,bonus:1.22},{day:1920,bonus:1.23},{day:2001,bonus:1.24},{day:2081,bonus:1.25},{day:2160,bonus:1.26},{day:2241,bonus:1.27},{day:2320,bonus:1.28},{day:2399,bonus:1.29},{day:2400,bonus:1.3}];
-  function getDayBonus(d){let b=1;for(const e of dayBonusTable){if(d>=e.day)b=e.bonus;else break}return b}
-  function getBaseRate(i){if(i<1e3)return .005;if(i<5e3)return .0053;if(i<1e4)return .0055;return .0063}
-  function getBonusRAM(i,d){if(d<120||i<1e3)return 0;if(i<=5e3)return i*.1;if(i<=1e4)return i*.15;return i*.2}
-  function getBonusRate(i){if(i<1e3)return 0;if(i<=5e3)return .0053;if(i<=1e4)return .00578;return .00693}
+  const dayBonusTable = [
+    {day:81,bonus:1},{day:161,bonus:1.01},{day:240,bonus:1.02},{day:320,bonus:1.03},{day:401,bonus:1.04},{day:480,bonus:1.05},
+    {day:561,bonus:1.06},{day:641,bonus:1.07},{day:720,bonus:1.08},{day:801,bonus:1.09},{day:881,bonus:1.1},{day:960,bonus:1.11},
+    {day:1041,bonus:1.12},{day:1121,bonus:1.13},{day:1200,bonus:1.14},{day:1281,bonus:1.15},{day:1361,bonus:1.16},{day:1440,bonus:1.17},
+    {day:1521,bonus:1.18},{day:1601,bonus:1.19},{day:1680,bonus:1.2},{day:1761,bonus:1.21},{day:1841,bonus:1.22},{day:1920,bonus:1.23},
+    {day:2001,bonus:1.24},{day:2081,bonus:1.25},{day:2160,bonus:1.26},{day:2241,bonus:1.27},{day:2320,bonus:1.28},{day:2399,bonus:1.29},{day:2400,bonus:1.3}
+  ];
+  function getDayBonus(d){ let b=1; for(const e of dayBonusTable){ if(d>=e.day) b=e.bonus; else break; } return b; }
+  function getBaseRate(i){ if(i<1e3) return .005; if(i<5e3) return .0053; if(i<1e4) return .0055; return .0063; }
+  function getBonusRAM(i,d){ if(d<120||i<1e3) return 0; if(i<=5e3) return i*.1; if(i<=1e4) return i*.15; return i*.2; }
+  function getBonusRate(i){ if(i<1e3) return 0; if(i<=5e3) return .0053; if(i<=1e4) return .00578; return .00693; }
 
-  // RAM 단일 계산기
+  // ----- RAM 단일 계산기 -----
   window.calculateRam = function() {
-    let invest = parseFloat(document.getElementById("invest").value) || 0, days = parseInt(document.getElementById("days").value) || 0;
-    const startMonth = document.getElementById("ramStartMonth").value, startDay = document.getElementById("ramStartDay").value;
-    let hashBonus = parseFloat(document.getElementById("hash").value), applyRamPromotion = document.getElementById("applyRamPromotion").checked;
+    const invest = parseFloat(document.getElementById("invest").value) || 0;
+    const days   = parseInt(document.getElementById("days").value) || 0;
+    const startMonth = document.getElementById("ramStartMonth").value;
+    const startDay   = document.getElementById("ramStartDay").value;
+    const hashBonus  = parseFloat(document.getElementById("hash").value) || 1;
+    const applyRamPromotion = document.getElementById("applyRamPromotion").checked;
     const resultRamDiv = document.getElementById("resultRam");
+
     if (!invest || !days) { resultRamDiv.innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요.</div>"; return; }
-    
+
     const interestPayingDays = Math.max(0, days - 2);
     const today = new Date(), startDate = new Date(`2025-${startMonth}-${startDay}`);
-    const diffDays = Math.max(0, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)));
+    const diffDays = Math.max(0, Math.floor((today - startDate) / (1000*60*60*24)));
     const remainDays = Math.max(0, days - diffDays);
     const interestDaysPassed = Math.max(0, diffDays - 2);
     const remainingInterestDays = Math.max(0, interestPayingDays - interestDaysPassed);
 
     let mainInterestRate = getBaseRate(invest);
-    if (applyRamPromotion && invest >= 1000 && days >= 120) {
-        mainInterestRate = getBonusRate(invest);
-    }
+    if (applyRamPromotion && invest >= 1000 && days >= 120) mainInterestRate = getBonusRate(invest);
 
     const dailyInterest_main = invest * mainInterestRate * hashBonus * getDayBonus(days);
     const total_main = dailyInterest_main * interestPayingDays;
     const recoveryDays_main = invest > 0 ? invest / dailyInterest_main : 0;
     const total_main_received_so_far = dailyInterest_main * interestDaysPassed;
     const total_main_remaining_until_maturity = dailyInterest_main * remainingInterestDays;
-    
+
     let bonusRAM = 0, dailyInterest_bonus = 0, bonus_interest_until_maturity = 0, bonus_interest_remaining = 0;
     if (applyRamPromotion && invest >= 1000 && days >= 120) {
-        bonusRAM = getBonusRAM(invest, days); dailyInterest_bonus = bonusRAM * getBonusRate(invest) * hashBonus * 1.3;
-        bonus_interest_until_maturity = dailyInterest_bonus * interestPayingDays;
-        bonus_interest_remaining = dailyInterest_bonus * Math.max(0, 2400 - days);
+      bonusRAM = getBonusRAM(invest, days);
+      dailyInterest_bonus = bonusRAM * getBonusRate(invest) * hashBonus * 1.3;
+      bonus_interest_until_maturity = dailyInterest_bonus * interestPayingDays;
+      bonus_interest_remaining = dailyInterest_bonus * Math.max(0, 2400 - days);
     }
-    
+
     const total_combined_received_so_far = (dailyInterest_main + dailyInterest_bonus) * interestDaysPassed;
     const total_combined_remaining_until_maturity = (dailyInterest_main + dailyInterest_bonus) * remainingInterestDays;
     const total_until_maturity_combined = total_main + bonus_interest_until_maturity;
     const recoveryDays_total = (invest > 0 && (dailyInterest_main + dailyInterest_bonus) > 0) ? invest / (dailyInterest_main + dailyInterest_bonus) : 0;
-    const alertMsg = (recoveryDays_main > 0 && recoveryDays_main > interestPayingDays) ? "<div class='alert-box alert-warning'>🔔 알림: 만기일이 원금 회수 기간보다 짧습니다.</div>" : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
-    
+    const alertMsg = (recoveryDays_main > 0 && recoveryDays_main > interestPayingDays)
+      ? "<div class='alert-box alert-warning'>🔔 알림: 만기일이 원금 회수 기간보다 짧습니다.</div>"
+      : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
+
     let dailyWeeklyMonthlyDisplay = "";
     if (remainDays > 0) {
-        let daily_total_for_remaining = dailyInterest_main + dailyInterest_bonus;
-        dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1일 이자: <span class='highlight'>${daily_total_for_remaining.toFixed(2)}</span> USDT</div>`;
-        if (remainDays >= 7) dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1주일 이자(7일): <span class='highlight'>${(daily_total_for_remaining * 7).toFixed(2)}</span> USDT</div>`;
-        if (remainDays >= 30) dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1달 이자(30일): <span class='highlight'>${(daily_total_for_remaining * 30).toFixed(2)}</span> USDT</div>`;
+      const daily_total_for_remaining = dailyInterest_main + dailyInterest_bonus;
+      dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1일 이자: <span class='highlight'>${daily_total_for_remaining.toFixed(2)}</span> USDT</div>`;
+      if (remainDays >= 7)  dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1주일 이자(7일): <span class='highlight'>${(daily_total_for_remaining * 7).toFixed(2)}</span> USDT</div>`;
+      if (remainDays >= 30) dailyWeeklyMonthlyDisplay += `<div class='result-item'>만기일까지 받을 1달 이자(30일): <span class='highlight'>${(daily_total_for_remaining * 30).toFixed(2)}</span> USDT</div>`;
     }
-    
+
     resultRamDiv.innerHTML = alertMsg + `
       <div class="result-section main-box"><div class="result-title">[내가 구매한 RAM]</div>
         <div class="result-item">투자 금액: <span class="highlight">${invest.toFixed(2)}</span> USDT</div>
@@ -361,90 +356,71 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="result-item">총 이자(${interestPayingDays}일): <span class="highlight">${total_main.toFixed(2)}</span> USDT</div>
         <div class="result-item">원금 회수 예상일: <span class="highlight">약 ${Math.ceil(recoveryDays_main)}일</span></div>
         <div class="result-item">현재까지 받은 총 이자: <span class="highlight">${total_main_received_so_far.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일 까지 남은 총 이자: <span class="highlight">${total_main_remaining_until_maturity.toFixed(2)}</span> USDT</div></div>
+        <div class="result-item">만기일까지 남은 총 이자: <span class="highlight">${total_main_remaining_until_maturity.toFixed(2)}</span> USDT</div>
+      </div>
       <div class="result-section bonus-box"><div class="result-title">[프로모션 보너스 RAM]</div>
         <div class="result-item">보너스 RAM: <span class="highlight">${bonusRAM.toFixed(2)}</span> USDT</div>
         <div class="result-item">일일 이자: <span class="highlight">${dailyInterest_bonus.toFixed(2)}</span> USDT</div>
         <div class="result-item">만기일까지 이자(${interestPayingDays}일): <span class="highlight">${bonus_interest_until_maturity.toFixed(2)}</span> USDT</div>
-        <div class="result-item">남은 기간 이자(${Math.max(0, 2400 - days)}일): <span class="highlight">${bonus_interest_remaining.toFixed(2)}</span> USDT</div></div>
+        <div class="result-item">남은 기간 이자(${Math.max(0, 2400 - days)}일): <span class="highlight">${bonus_interest_remaining.toFixed(2)}</span> USDT</div>
+      </div>
       <div class="result-section total-box"><div class="result-title">[총 합계]</div>
         <div class="result-item">스테이킹 진행: <span class="highlight">${diffDays}일 경과 / ${remainDays}일 남음</span></div>
         <div class="result-item">현재까지 받은 총 이자(스테이킹+보너스): <span class="highlight">${total_combined_received_so_far.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일 까지 남은 총 이자(스테이킹+보너스): <span class="highlight">${total_combined_remaining_until_maturity.toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기일까지 남은 총 이자(스테이킹+보너스): <span class="highlight">${total_combined_remaining_until_maturity.toFixed(2)}</span> USDT</div>
         <div class="result-item">만기일까지 받는 총 이자(스테이킹+보너스): <span class="highlight">${total_until_maturity_combined.toFixed(2)}</span> USDT</div>
-        <div class="result-item">원금 회수 예상(보너스 포함): <span class="highlight">약 ${Math.ceil(recoveryDays_total)}일</span></div></div>
-      <div class="result-section total-box">${dailyWeeklyMonthlyDisplay}</div>`;
+        <div class="result-item">원금 회수 예상(보너스 포함): <span class="highlight">약 ${Math.ceil(recoveryDays_total)}일</span></div>
+      </div>
+      <div class="result-section total-box">${dailyWeeklyMonthlyDisplay}</div>
+    `;
   };
 
-  // RAM 복리 전략 시뮬레이터
+  // ----- RAM 복리 전략 -----
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
     const startMonth = document.getElementById("compStartMonth").value;
-    const startDay = document.getElementById("compStartDay").value;
-    const hashBonus = parseFloat(document.getElementById("compHash").value) || 1;
-    const threshold = Math.max(0, parseFloat(document.getElementById("compThreshold").value) || 1001);
+    const startDay   = document.getElementById("compStartDay").value;
+    const hashBonus  = parseFloat(document.getElementById("compHash").value) || 1;
+    const threshold  = Math.max(0, parseFloat(document.getElementById("compThreshold").value) || 1001);
     let newStakeDays = parseInt(document.getElementById("compNewDays").value) || 120;
-    const applyPromoInitial = document.getElementById("applyCompPromoInitial").checked;
+    const applyPromoInitial  = document.getElementById("applyCompPromoInitial").checked;
     const applyPromoReinvest = document.getElementById("applyCompPromoReinvest").checked;
     const horizon = Math.max(1, parseInt(document.getElementById("compHorizon").value) || 2400);
 
     const resultDiv = document.getElementById("resultCompound");
-
-    if (!initial || !initDays) {
-      resultDiv.innerHTML = "<div class='alert-box alert-warning'>초기 금액과 기간을 입력하세요.</div>";
-      return;
-    }
-
-    // 프로모션 적용이면 재예치 기간은 120일 이상
+    if (!initial || !initDays) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>초기 금액과 기간을 입력하세요.</div>"; return; }
     if (applyPromoReinvest && newStakeDays < 120) newStakeDays = 120;
 
     const startDate = new Date(`2025-${startMonth}-${startDay}`);
-    if (isNaN(startDate.getTime())) {
-      resultDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 시작일을 선택하세요.</div>";
-      return;
-    }
+    if (isNaN(startDate.getTime())) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 시작일을 선택하세요.</div>"; return; }
 
-    // 포지션 구조
     const positions = [];
-    let wallet = 0;
-    let createdStakes = 0;
-    let totalMainInterest = 0;
-    let totalBonusInterest = 0;
+    let wallet = 0, createdStakes = 0, totalMainInterest = 0, totalBonusInterest = 0;
 
-    // 초기 포지션 생성
     const initPromo = applyPromoInitial && initial >= 1000 && initDays >= 120;
-    const initMainRate = initPromo ? getBonusRate(initial) : getBaseRate(initial);
-    const initBonusAmount = initPromo ? getBonusRAM(initial, initDays) : 0;
-    const initBonusRate = initPromo ? getBonusRate(initial) : 0;
+    const initMainRate   = initPromo ? getBonusRate(initial)      : getBaseRate(initial);
+    const initBonusAmount= initPromo ? getBonusRAM(initial,initDays) : 0;
+    const initBonusRate  = initPromo ? getBonusRate(initial)      : 0;
 
     positions.push({
-      amount: initial,
-      startDayIndex: 0,
-      mainDays: initDays,
-      mainRate: initMainRate,
-      bonusAmount: initBonusAmount,
-      bonusRate: initBonusRate,
-      promoApplied: initPromo
+      amount: initial, startDayIndex: 0, mainDays: initDays,
+      mainRate: initMainRate, bonusAmount: initBonusAmount, bonusRate: initBonusRate, promoApplied: initPromo
     });
 
-    // 하루 단위 시뮬레이션
     for (let day = 0; day < horizon; day++) {
-      let dailyMain = 0;
-      let dailyBonus = 0;
+      let dailyMain = 0, dailyBonus = 0;
 
       for (const p of positions) {
         const age = day - p.startDayIndex;
         if (age < 0) continue;
 
-        // 메인 이자: D+2부터 mainDays까지만
         if (age >= 2 && age < p.mainDays) {
           const dayBonusFactor = getDayBonus(p.mainDays);
           dailyMain += p.amount * p.mainRate * hashBonus * dayBonusFactor;
         }
-        // 보너스 RAM 이자: D+2부터, 2400일 기준 1.3 계수(간략화)
         if (p.bonusAmount > 0 && age >= 2) {
-          const bonusDayFactor = 1.3;
+          const bonusDayFactor = 1.3; // 2400일 기준 간략 계수
           dailyBonus += p.bonusAmount * p.bonusRate * hashBonus * bonusDayFactor;
         }
       }
@@ -453,39 +429,25 @@ document.addEventListener("DOMContentLoaded", function () {
       totalBonusInterest += dailyBonus;
       wallet += (dailyMain + dailyBonus);
 
-      // 임계치 도달 시 전액 재예치 (초기화)
       while (wallet >= threshold) {
-        const stakeAmt = wallet;
-        wallet = 0;
-
+        const stakeAmt = wallet; wallet = 0;
         const promoOk = applyPromoReinvest && stakeAmt >= 1000 && newStakeDays >= 120;
         const mainRateNew = promoOk ? getBonusRate(stakeAmt) : getBaseRate(stakeAmt);
         const bonusAmtNew = promoOk ? getBonusRAM(stakeAmt, newStakeDays) : 0;
-        const bonusRateNew = promoOk ? getBonusRate(stakeAmt) : 0;
+        const bonusRateNew= promoOk ? getBonusRate(stakeAmt) : 0;
 
         positions.push({
-          amount: stakeAmt,
-          startDayIndex: day,
-          mainDays: newStakeDays,
-          mainRate: mainRateNew,
-          bonusAmount: bonusAmtNew,
-          bonusRate: bonusRateNew,
-          promoApplied: promoOk
+          amount: stakeAmt, startDayIndex: day, mainDays: newStakeDays,
+          mainRate: mainRateNew, bonusAmount: bonusAmtNew, bonusRate: bonusRateNew, promoApplied: promoOk
         });
         createdStakes++;
       }
     }
 
-    // 요약
     let totalPrincipal = 0, totalBonusPrincipal = 0, promoCount = 0;
-    positions.forEach(p => {
-      totalPrincipal += p.amount;
-      totalBonusPrincipal += p.bonusAmount || 0;
-      if (p.promoApplied) promoCount++;
-    });
+    positions.forEach(p => { totalPrincipal += p.amount; totalBonusPrincipal += (p.bonusAmount||0); if (p.promoApplied) promoCount++; });
 
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + horizon);
+    const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + horizon);
 
     resultDiv.innerHTML = `
       <div class="result-section main-box">
@@ -508,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   };
 
-  // CPI 계산기
+  // ----- CPI 계산기 -----
   window.calculateCpiGrowth = function() {
     const initialInvest = parseFloat(document.getElementById("initialInvest").value) || 0;
     const iMonth = document.getElementById("cpiInitialMonth").value, iDay = document.getElementById("cpiInitialDay").value;
@@ -523,7 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if ((initialInvest > 0 && isNaN(initialDate.getTime())) || (additionalInvest > 0 && isNaN(additionalDate.getTime()))) {
       resultCpiDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 날짜를 선택해주세요.</div>"; return;
     }
-    
+
     const today = new Date();
     const totalPrincipal = initialInvest + additionalInvest;
     const bonusAmount = (applyPromo && additionalInvest >= 1000) ? additionalInvest * 0.10 : 0;
@@ -531,53 +493,98 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let earliestDate;
     if (initialInvest > 0 && additionalInvest > 0) earliestDate = new Date(Math.min(initialDate, additionalDate));
-    else if (initialInvest > 0) earliestDate = initialDate;
-    else earliestDate = additionalDate;
+    else if (initialInvest > 0) earliestDate = initialDate; else earliestDate = additionalDate;
 
-    // 오늘 기준 현황
-    const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000 * 60 * 60 * 24)));
+    const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000*60*60*24)));
     let todayCPI = 0, todayAccumulated = 0, todayReinvestedAmount = 0, todayReinvestCount = 0;
     let totalBonusInterestReleased = 0;
-    for (let day = 0; day <= daysPassedSinceStart; day++) {
-        let currentDate = new Date(earliestDate);
-        currentDate.setDate(earliestDate.getDate() + day);
-        if (initialInvest > 0 && currentDate.getTime() === initialDate.getTime()) todayCPI += initialInvest;
-        if (additionalInvest > 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
-        
-        const dailyInterestFromCPI = todayCPI * dailyYieldRate;
-        let dailyInterestFromBonus = 0;
-        if (bonusAmount > 0 && currentDate >= additionalDate) {
-            dailyInterestFromBonus = bonusAmount * promoDailyYieldRate;
-            totalBonusInterestReleased += dailyInterestFromBonus;
-        }
-        todayAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
 
-        if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
-            todayCPI += todayAccumulated; todayReinvestedAmount += todayAccumulated; todayReinvestCount++; todayAccumulated = 0;
-        }
+    for (let day = 0; day <= daysPassedSinceStart; day++) {
+      const currentDate = new Date(earliestDate);
+      currentDate.setDate(earliestDate.getDate() + day);
+      if (initialInvest   > 0 && currentDate.getTime() === initialDate.getTime())   todayCPI += initialInvest;
+      if (additionalInvest> 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
+
+      const dailyInterestFromCPI = todayCPI * dailyYieldRate;
+      let dailyInterestFromBonus = 0;
+      if (bonusAmount > 0 && currentDate >= additionalDate) {
+        dailyInterestFromBonus = bonusAmount * promoDailyYieldRate;
+        totalBonusInterestReleased += dailyInterestFromBonus;
+      }
+      todayAccumulated += (dailyInterestFromCPI + dailyInterestFromBonus);
+
+      if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
+        todayCPI += todayAccumulated; todayReinvestedAmount += todayAccumulated; todayReinvestCount++; todayAccumulated = 0;
+      }
     }
+
     const daysToNextReinvestCycle = reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays;
     const dailyBonusInterestToday = (bonusAmount > 0 && today >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
     const currentTotalDailyInterest = (todayCPI * dailyYieldRate) + dailyBonusInterestToday;
 
-    // 성장 목표 예측
     let simCPI = todayCPI;
     let simAccumulated = todayAccumulated;
     let daysTo2x = "미달성", daysTo3x = "미달성", daysTo4x = "미달성";
-    if (todayCPI >= totalPrincipal * 4) { daysTo2x = "달성 완료"; daysTo3x = "달성 완료"; daysTo4x = "달성 완료"; }
-    else if (todayCPI >= totalPrincipal * 3) { daysTo2x = "달성 완료"; daysTo3x = "달성 완료"; }
-    else if (todayCPI >= totalPrincipal * 2) { daysTo2x = "달성 완료"; }
+    if (todayCPI >= totalPrincipal * 4) { daysTo2x="달성 완료"; daysTo3x="달성 완료"; daysTo4x="달성 완료"; }
+    else if (todayCPI >= totalPrincipal * 3) { daysTo2x="달성 완료"; daysTo3x="달성 완료"; }
+    else if (todayCPI >= totalPrincipal * 2) { daysTo2x="달성 완료"; }
 
-    for (let day = 1; day <= 365 * 10; day++) {
-        if(daysTo4x !== "미달성" && daysTo4x !== "달성 완료") break;
-        let futureDate = new Date(today);
-        futureDate.setDate(today.getDate() + day);
-        
-        const dailyInterestFromCPI = simCPI * dailyYieldRate;
-        const dailyInterestFromBonus = (additionalInvest > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
-        simAccumulated += dailyInterestFromCPI + dailyInterestFromBonus;
+    for (let day = 1; day <= 365*10; day++) {
+      if (daysTo4x !== "미달성" && daysTo4x !== "달성 완료") break;
+      const futureDate = new Date(today); futureDate.setDate(today.getDate() + day);
+      const dailyInterestFromCPI = simCPI * dailyYieldRate;
+      const dailyInterestFromBonus = (additionalInvest > 0 && futureDate >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
+      simAccumulated += (dailyInterestFromCPI + dailyInterestFromBonus);
 
-        if ((daysPassedSinceStart + day + 1) % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
-            simCPI += simAccumulated; simAccumulated = 0;
-        }
-        if (daysTo2x === "미달성" && simCPI >= total
+      if ((daysPassedSinceStart + day + 1) % reinvestCycleDays === 0 && simAccumulated >= minReinvestAmount) {
+        simCPI += simAccumulated; simAccumulated = 0;
+      }
+      if (daysTo2x === "미달성" && simCPI >= totalPrincipal * 2) daysTo2x = day;
+      if (daysTo3x === "미달성" && simCPI >= totalPrincipal * 3) daysTo3x = day;
+      if (daysTo4x === "미달성" && simCPI >= totalPrincipal * 4) { daysTo4x = day; break; }
+    }
+
+    resultCpiDiv.innerHTML = `
+      <div class='result-section cpi-main-box'>
+        <div class='result-title'>[내가 스테이킹한 CPI]</div>
+        <div class='result-item'>기존 입금액: <span class='highlight'>${initialInvest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>추가 입금액: <span class='highlight'>${additionalInvest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘 기준 총 CPI: <span class='highlight'>${todayCPI.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1일 총 해제량: <span class='highlight'>${currentTotalDailyInterest.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>1주일 총 해제량: <span class='highlight'>${(currentTotalDailyInterest * 7).toFixed(2)}</span> USDT</div>
+      </div>
+      <div class='result-section cpi-bonus-box'>
+        <div class='result-title'>[프로모션 보너스 USDL]</div>
+        <div class='result-item'>보너스 USDL 금액: <span class='highlight'>${bonusAmount.toFixed(2)}</span> USDT (고정)</div>
+        <div class='result-item'>일일 해제량: <span class='highlight'>${dailyBonusInterestToday.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>총 해제된 보너스: <span class='highlight'>${totalBonusInterestReleased.toFixed(2)}</span> USDT</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[My CPI (오늘 기준)]</div>
+        <div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>${daysPassedSinceStart}</span> 일 경과</div>
+        <div class='result-item'>오늘 기준 총 자산 (CPI+보너스): <span class='highlight'>${(todayCPI + bonusAmount).toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
+        <div class='result-item'>다음 재투자까지 쌓인 이자: <span class='highlight'>${todayAccumulated.toFixed(2)}</span> USDT</div>
+        <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
+      </div>
+      <div class='result-section cpi-summary-box'>
+        <div class='result-title'>[CPI 성장 목표 달성 예측]</div>
+        <div class='result-item'>2배 달성까지: <span class='highlight'>${daysTo2x === "달성 완료" ? "달성 완료" : daysTo2x + " 일 남음"}</span></div>
+        <div class='result-item'>3배 달성까지: <span class='highlight'>${daysTo3x === "달성 완료" ? "달성 완료" : daysTo3x + " 일 남음"}</span></div>
+        <div class='result-item'>4배 달성까지: <span class='highlight'>${daysTo4x === "달성 완료" ? "달성 완료" : daysTo4x + " 일 남음"}</span></div>
+      </div>
+    `;
+  };
+
+  // ---- 버튼 클릭 바인딩 (확장 충돌 회피) ----
+  const btnCpi = document.getElementById('btnCpi');
+  const btnRam = document.getElementById('btnRam');
+  const btnCompound = document.getElementById('btnCompound');
+  if (btnCpi)      btnCpi.addEventListener('click', () => { try { window.calculateCpiGrowth(); } catch(e){ console.error(e); } });
+  if (btnRam)      btnRam.addEventListener('click', () => { try { window.calculateRam(); } catch(e){ console.error(e); } });
+  if (btnCompound) btnCompound.addEventListener('click', () => { try { window.simulateCompoundRam(); } catch(e){ console.error(e); } });
+})();
+</script>
+</body>
+</html>
