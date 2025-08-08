@@ -375,7 +375,7 @@
     `;
   };
 
-  // ----- RAM 복리 전략 -----
+  // ----- RAM 복리 전략 (보너스 2400일 캡 + 결과 3박스) -----
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
@@ -395,19 +395,21 @@
     const startDate = new Date(`2025-${startMonth}-${startDay}`);
     if (isNaN(startDate.getTime())) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 시작일을 선택하세요.</div>"; return; }
 
+    // 포지션
     const positions = [];
     let wallet = 0, createdStakes = 0, totalMainInterest = 0, totalBonusInterest = 0;
 
     const initPromo = applyPromoInitial && initial >= 1000 && initDays >= 120;
-    const initMainRate   = initPromo ? getBonusRate(initial)      : getBaseRate(initial);
+    const initMainRate   = initPromo ? getBonusRate(initial)         : getBaseRate(initial);
     const initBonusAmount= initPromo ? getBonusRAM(initial,initDays) : 0;
-    const initBonusRate  = initPromo ? getBonusRate(initial)      : 0;
+    const initBonusRate  = initPromo ? getBonusRate(initial)         : 0;
 
     positions.push({
       amount: initial, startDayIndex: 0, mainDays: initDays,
       mainRate: initMainRate, bonusAmount: initBonusAmount, bonusRate: initBonusRate, promoApplied: initPromo
     });
 
+    // 시뮬레이션
     for (let day = 0; day < horizon; day++) {
       let dailyMain = 0, dailyBonus = 0;
 
@@ -415,17 +417,19 @@
         const age = day - p.startDayIndex;
         if (age < 0) continue;
 
+        // 메인: D+2 ~ mainDays-1
         if (age >= 2 && age < p.mainDays) {
           const dayBonusFactor = getDayBonus(p.mainDays);
           dailyMain += p.amount * p.mainRate * hashBonus * dayBonusFactor;
         }
-        if (p.bonusAmount > 0 && age >= 2) {
-          const bonusDayFactor = 1.3; // 2400일 기준 간략 계수
+        // 보너스: D+2 ~ 2399 (== 2400일 캡)
+        if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
+          const bonusDayFactor = 1.3;
           dailyBonus += p.bonusAmount * p.bonusRate * hashBonus * bonusDayFactor;
         }
       }
 
-      totalMainInterest += dailyMain;
+      totalMainInterest  += dailyMain;
       totalBonusInterest += dailyBonus;
       wallet += (dailyMain + dailyBonus);
 
@@ -444,28 +448,50 @@
       }
     }
 
+    // 현재 시점(시뮬레이션 마지막 날 기준) 일일 이자 계산
+    const todayIndex = Math.max(0, horizon - 1);
+    let currentDailyMain = 0, currentDailyBonus = 0, activeMainDays = 0;
+    positions.forEach(p => {
+      const age = todayIndex - p.startDayIndex;
+      if (age >= 2 && age < p.mainDays) {
+        currentDailyMain += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
+        activeMainDays += 1;
+      }
+      if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
+        currentDailyBonus += p.bonusAmount * p.bonusRate * hashBonus * 1.3;
+      }
+    });
+
+    // 합계
     let totalPrincipal = 0, totalBonusPrincipal = 0, promoCount = 0;
     positions.forEach(p => { totalPrincipal += p.amount; totalBonusPrincipal += (p.bonusAmount||0); if (p.promoApplied) promoCount++; });
 
     const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + horizon);
 
+    // 결과: RAM 탭과 동일한 3박스 구조
     resultDiv.innerHTML = `
       <div class="result-section main-box">
-        <div class="result-title">[시뮬레이션 요약]</div>
-        <div class="result-item">기간: <span class="highlight">${horizon}</span>일 (${startDate.toISOString().slice(0,10)} ~ ${endDate.toISOString().slice(0,10)})</div>
-        <div class="result-item">생성된 복리 스테이킹 수: <span class="highlight">${createdStakes}</span> 개</div>
-        <div class="result-item">이 중 프로모션 적용 포지션: <span class="highlight">${promoCount}</span> 개</div>
-        <div class="result-item">총 스테이킹 원금(메인 합계): <span class="highlight">${totalPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">프로모션 보너스 RAM 합계: <span class="highlight">${totalBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-title">[내가 보유한 RAM(메인)]</div>
+        <div class="result-item">포지션 수(메인 활성): <span class="highlight">${activeMainDays}</span> 개</div>
+        <div class="result-item">총 원금(메인 합계): <span class="highlight">${totalPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">현재 기준 1일 이자(메인): <span class="highlight">${currentDailyMain.toFixed(2)}</span> USDT</div>
         <div class="result-item">누적 메인 이자: <span class="highlight">${totalMainInterest.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 보너스 이자: <span class="highlight">${totalBonusInterest.toFixed(2)}</span> USDT</div>
-        <div class="result-item">지갑(미재예치 이자) 잔액: <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
       </div>
+
+      <div class="result-section bonus-box">
+        <div class="result-title">[프로모션 보너스 RAM]</div>
+        <div class="result-item">보너스 RAM 합계: <span class="highlight">${totalBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">현재 기준 1일 이자(보너스): <span class="highlight">${currentDailyBonus.toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 보너스 이자: <span class="highlight">${totalBonusInterest.toFixed(2)}</span> USDT</div>
+        <div class="result-item">프로모션 적용 포지션: <span class="highlight">${promoCount}</span> 개</div>
+      </div>
+
       <div class="result-section total-box">
-        <div class="result-title">[정책]</div>
-        <div class="result-item">- <b>프로모션 적용</b> 체크 시: 보너스 레이트/보너스 RAM 적용(조건: ≥1000 USDT, ≥120일).</div>
-        <div class="result-item">- 미적용 시: 기본 레이트, 보너스 RAM 없음(기간 제한 없음).</div>
-        <div class="result-item">- 해시레이트 보너스는 시뮬레이션 전체에 동일하게 적용.</div>
+        <div class="result-title">[총 합계]</div>
+        <div class="result-item">시뮬레이션 기간: <span class="highlight">${horizon}</span>일 (${startDate.toISOString().slice(0,10)} ~ ${endDate.toISOString().slice(0,10)})</div>
+        <div class="result-item">현재 기준 1일 총 이자: <span class="highlight">${(currentDailyMain + currentDailyBonus).toFixed(2)}</span> USDT</div>
+        <div class="result-item">1주/1달 총 이자(현재 기준): <span class="highlight">${((currentDailyMain + currentDailyBonus)*7).toFixed(2)} / ${((currentDailyMain + currentDailyBonus)*30).toFixed(2)}</span> USDT</div>
+        <div class="result-item">지갑(미재예치 이자) 잔액: <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
       </div>
     `;
   };
@@ -563,21 +589,12 @@
         <div class='result-title'>[My CPI (오늘 기준)]</div>
         <div class='result-item'>스테이킹 시작일로부터: <span class='highlight'>${daysPassedSinceStart}</span> 일 경과</div>
         <div class='result-item'>오늘 기준 총 자산 (CPI+보너스): <span class='highlight'>${(todayCPI + bonusAmount).toFixed(2)}</span> USDT</div>
-        <div class='result-item'>오늘까지 재투자된 금액: <span class='highlight'>${todayReinvestedAmount.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>오늘까지 재투자 횟수: <span class='highlight'>${todayReinvestCount}</span> 회</div>
-        <div class='result-item'>다음 재투자까지 쌓인 이자: <span class='highlight'>${todayAccumulated.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>다음 재투자까지: <span class='highlight'>${daysToNextReinvestCycle}</span> 일 남음</div>
-      </div>
-      <div class='result-section cpi-summary-box'>
-        <div class='result-title'>[CPI 성장 목표 달성 예측]</div>
-        <div class='result-item'>2배 달성까지: <span class='highlight'>${daysTo2x === "달성 완료" ? "달성 완료" : daysTo2x + " 일 남음"}</span></div>
-        <div class='result-item'>3배 달성까지: <span class='highlight'>${daysTo3x === "달성 완료" ? "달성 완료" : daysTo3x + " 일 남음"}</span></div>
-        <div class='result-item'>4배 달성까지: <span class='highlight'>${daysTo4x === "달성 완료" ? "달성 완료" : daysTo4x + " 일 남음"}</span></div>
+        <div class='result-item'>다음 재투자까지: <span class='highlight'>${reinvestCycleDays - (daysPassedSinceStart + 1) % reinvestCycleDays}</span> 일</div>
       </div>
     `;
   };
 
-  // ---- 버튼 클릭 바인딩 (확장 충돌 회피) ----
+  // ---- 버튼 클릭 바인딩 ----
   const btnCpi = document.getElementById('btnCpi');
   const btnRam = document.getElementById('btnRam');
   const btnCompound = document.getElementById('btnCompound');
