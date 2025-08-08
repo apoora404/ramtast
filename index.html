@@ -22,11 +22,9 @@
     box-shadow: 0 3px 10px rgba(140,126,255,0.4); }
   .tab-content, .result-content { display: none; }
   .tab-content.active, .result-content.active { display: block; }
-  .promo-content img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; border-radius: 10px; }
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .input-group { border-top: 1px solid #8c7eff33; padding-top: 15px; }
-  h2, h3 { text-align: center; color: #8c7eff; margin-bottom: 25px; text-shadow: 0 0 5px rgba(140,126,255,0.5); }
-  h2 { font-size: 28px; margin-top: 0; } h3 { font-size: 22px; text-align: left; }
+  h2 { text-align: center; color: #8c7eff; margin: 10px 0 25px; text-shadow: 0 0 5px rgba(140,126,255,0.5); }
   label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #c9d2e0; }
   input[type="number"], select { width: 100%; padding: 12px 15px; border: 1px solid #8c7eff55;
     border-radius: 10px; background: #120c24; color: #e0e6f0; box-sizing: border-box; }
@@ -34,57 +32,29 @@
   .promo-checkbox { display: flex; align-items: center; margin-top: 20px; padding: 10px;
     background: #120c24; border-radius: 8px; cursor: pointer; }
   .promo-checkbox input { width: 18px; height: 18px; margin-right: 12px; }
-  button, .telegram-link { display: block; text-align: center; margin-top: 30px; width: 100%; padding: 16px; 
+  button { display: block; text-align: center; margin-top: 30px; width: 100%; padding: 16px; 
     background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
-    cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+    cursor: pointer; transition: all 0.3s ease; }
 
   .result-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  #promoResult.active { display: block; }
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
   .result-title { font-weight: bold; font-size: 18px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .result-item { margin: 10px 0; font-size: 16px; line-height: 1.5; word-break: keep-all; }
-  .highlight { font-weight: bold; font-size: 1.1em; color: #5effc9; }
-  .promo-text ul { padding-left: 20px; } .promo-text li { margin-bottom: 10px; line-height: 1.6; }
-  .main-box, .cpi-main-box { background:#1f1636; border-color: #4e8ef7; }
-  .main-box .result-title, .cpi-main-box .result-title { color: #4e8ef7; }
-  .bonus-box, .cpi-bonus-box { background:#2a1b42; border-color: #8c63ff; }
-  .bonus-box .result-title, .cpi-bonus-box .result-title { color: #8c63ff; }
-  .total-box, .cpi-summary-box { background:#202a3a; border-color: #2fd4b5; }
-  .total-box .result-title, .cpi-summary-box .result-title { color: #2fd4b5; }
+  .highlight { font-weight: bold; font-size: 1.05em; color: #5effc9; }
+  .main-box { background:#1f1636; border-color: #4e8ef7; }
+  .bonus-box { background:#2a1b42; border-color: #8c63ff; }
+  .total-box { background:#202a3a; border-color: #2fd4b5; }
   .alert-box { padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; margin-bottom: 0; }
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
   .alert-success { background: #1a3a1a; color: #6bff6b; border: 1px solid #4dff4d; }
 
-  /* 클릭 가림 방지 */
-  .input-column { position: relative; z-index: 2; }
-  .results-column { position: relative; z-index: 1; }
-
-  /* ===== 복리 전략 레이아웃: 좌측(2×2 그리드) | 우측(타임라인) ===== */
-  #resultCompound.active { display: block; }
-  .compound-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-  .compound-left { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .compound-right { display: block; }
-  @media (max-width: 1100px) {
-    .compound-grid { grid-template-columns: 1fr; }
-    .compound-left { grid-template-columns: 1fr; }
-  }
-
-  /* ===== 타임라인 아코디언 ===== */
-  .timeline { background:#1a1730; border:1px solid #3a2f6b; border-radius: 12px; padding: 16px; }
-  .timeline .tl-title { font-weight: bold; color: #b5a8ff; margin-bottom: 10px; }
-  .timeline .tl-item { background: #151234; border: 1px solid #3a2f6b; border-radius: 10px; margin: 10px 0; }
-  .timeline details { padding: 8px 12px; }
-  .timeline summary { cursor: pointer; list-style: none; outline: none; font-weight: 600; color: #cfc8ff;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .timeline summary::-webkit-details-marker { display:none; }
-  .timeline .chip { display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid #8c7eff66; font-size:12px; }
-  .timeline .tl-body { padding: 8px 4px 12px 4px; }
-  .timeline .actions { display:flex; gap:8px; margin-bottom:8px; }
-  .timeline .actions button { padding: 8px 12px; width: auto; margin-top: 0; font-size: 14px; }
-
-  @media (max-width: 900px) {
-    .calculator-wrapper { flex-direction: column; }
-    .input-grid, .result-content.active { grid-template-columns: 1fr; }
+  /* 복리 전략 레이아웃: 왼쪽(2×2 = 초기 상품) | 오른쪽(재예치 요약) */
+  #resultCompound.active { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+  #compoundLeft  { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  #compoundRight { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (max-width: 1000px) {
+    #resultCompound.active { grid-template-columns: 1fr; }
+    #compoundLeft { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -94,41 +64,54 @@
     <div class="calculator-wrapper">
       <div class="input-column">
         <div class="tabs">
-          <button class="tab-button active" data-tab="cpi">CPI 계산기</button>
+          <button class="tab-button active" data-tab="compound">RAM 복리 전략</button>
           <button class="tab-button" data-tab="ram">RAM 계산기</button>
-          <button class="tab-button" data-tab="compound">RAM 복리 전략</button>
-          <button class="tab-button" data-tab="promo">프로모션</button>
         </div>
 
-        <!-- CPI -->
-        <div id="cpiTab" class="tab-content active">
-          <h2>CPI 계산기</h2>
+        <!-- RAM 복리 전략 -->
+        <div id="compoundTab" class="tab-content active">
+          <h2>RAM 복리 전략</h2>
           <div class="input-grid">
             <div class="input-group">
-              <label for="initialInvest">기존 CPI 입금액 (USDT):</label>
-              <input type="number" id="initialInvest" placeholder="기존 투자금" />
-              <label for="cpiInitialMonth">최초 시작일 (2025년):</label>
+              <label for="compInitial">초기 스테이킹 금액 (USDT):</label>
+              <input type="number" id="compInitial" value="10001" />
+              <label for="compDays">초기 스테이킹 기간(일):</label>
+              <input type="number" id="compDays" value="120" />
+              <label for="compStartMonth">시작일 (2025년):</label>
               <div class="date-select-group">
-                <select id="cpiInitialMonth"></select><select id="cpiInitialDay"></select>
+                <select id="compStartMonth"></select><select id="compStartDay"></select>
               </div>
+              <label class="promo-checkbox">
+                <input type="checkbox" id="applyCompPromoInitial" checked />
+                <span>초기 예치에 프로모션 적용</span>
+              </label>
             </div>
             <div class="input-group">
-              <label for="additionalInvest">추가 CPI 입금액 (USDT):</label>
-              <input type="number" id="additionalInvest" placeholder="추가 투자금" />
-              <label for="cpiAdditionalMonth">추가 입금일 (2025년):</label>
-              <div class="date-select-group">
-                <select id="cpiAdditionalMonth"></select><select id="cpiAdditionalDay"></select>
-              </div>
+              <label for="compHash">해시레이트 구간:</label>
+              <select id="compHash">
+                <option value="1">1M ~ 5M</option>
+                <option value="1.05">5M ~ 8M</option>
+                <option value="1.1025">8M ~ 16M</option>
+                <option value="1.157625">16M ~ 25M</option>
+                <option value="1.21550625">25M ~ 50M</option>
+                <option value="1.27628157">50M+</option>
+              </select>
+              <label for="compThreshold">재예치 트리거 (USDT):</label>
+              <input type="number" id="compThreshold" value="1001" />
+              <label for="compNewDays">재예치 기간(일):</label>
+              <input type="number" id="compNewDays" value="120" />
+              <label class="promo-checkbox">
+                <input type="checkbox" id="applyCompPromoReinvest" checked />
+                <span>재예치에 프로모션 적용</span>
+              </label>
+              <label for="compHorizon">시뮬레이션 기간(일):</label>
+              <input type="number" id="compHorizon" value="2400" />
             </div>
           </div>
-          <label class="promo-checkbox">
-            <input type="checkbox" id="applyCpiPromotion" />
-            <span>추가 입금액에 프로모션 적용 (1000 USDT 이상)</span>
-          </label>
-          <button id="btnCpi" type="button">계산하기</button>
+          <button id="btnCompound" type="button">시뮬레이션</button>
         </div>
 
-        <!-- RAM -->
+        <!-- RAM 단일 계산기(비교용) -->
         <div id="ramTab" class="tab-content">
           <h2>RAM 계산기</h2>
           <label for="invest">할당 금액 (USDT):</label>
@@ -154,82 +137,15 @@
           </label>
           <button id="btnRam" type="button">계산하기</button>
         </div>
-
-        <!-- RAM 복리 전략 -->
-        <div id="compoundTab" class="tab-content">
-          <h2>RAM 복리 전략</h2>
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="compInitial">초기 스테이킹 금액 (USDT):</label>
-              <input type="number" id="compInitial" placeholder="예: 10001" value="10001" />
-              <label for="compDays">초기 스테이킹 기간(일):</label>
-              <input type="number" id="compDays" placeholder="예: 120" value="120" />
-              <label for="compStartMonth">시작일 (2025년):</label>
-              <div class="date-select-group">
-                <select id="compStartMonth"></select><select id="compStartDay"></select>
-              </div>
-              <label class="promo-checkbox">
-                <input type="checkbox" id="applyCompPromoInitial" checked />
-                <span>초기 예치에 프로모션 적용</span>
-              </label>
-            </div>
-
-            <div class="input-group">
-              <label for="compHash">해시레이트 구간:</label>
-              <select id="compHash">
-                <option value="1">1M ~ 5M</option>
-                <option value="1.05">5M ~ 8M</option>
-                <option value="1.1025">8M ~ 16M</option>
-                <option value="1.157625">16M ~ 25M</option>
-                <option value="1.21550625">25M ~ 50M</option>
-                <option value="1.27628157">50M+</option>
-              </select>
-              <label for="compThreshold">재예치 트리거 (USDT):</label>
-              <input type="number" id="compThreshold" placeholder="≥ 1001 권장" value="1001" />
-              <label for="compNewDays">재예치 기간(일):</label>
-              <input type="number" id="compNewDays" placeholder="예: 120" value="120" />
-              <label class="promo-checkbox">
-                <input type="checkbox" id="applyCompPromoReinvest" checked />
-                <span>재예치에 프로모션 적용</span>
-              </label>
-              <label for="compHorizon">시뮬레이션 기간(일):</label>
-              <input type="number" id="compHorizon" placeholder="예: 2400" value="2400" />
-            </div>
-          </div>
-          <button id="btnCompound" type="button">시뮬레이션</button>
-        </div>
-
-        <!-- 프로모션 안내 -->
-        <div id="promoTab" class="tab-content promo-text">
-          <h3>1. RAM 참여 더블 보너스</h3>
-          <ul>
-            <li><strong>프로모션 기간:</strong> 7.17~12월 31일 (기간내 스테이킹만 인정, 소급 불가)</li>
-            <li><strong>참여방법:</strong> RAM 단일 예치, 최소 120일, 1000 USDT 이상</li>
-            <li><strong>구간 보너스 안내(120일 이상 예치):</strong>
-              <ul>
-                <li>1001~5000: 0.53% / 2400일 할당의 10% 보너스 RAM</li>
-                <li>5001~10000: 0.578% / 15%</li>
-                <li>10001~: 0.693% / 20%</li>
-              </ul>
-            </li>
-          </ul>
-          <h3>2. CPI 스테이킹</h3>
-          <ul>
-            <li>CPI 1000 USDT당 10% USDL 스테이킹 드랍</li>
-            <li><strong>기간:</strong> 7.17~12월 31일 (소급 불가)</li>
-          </ul>
-          <a href="https://t.me/sollong_kr/158" target="_blank" class="telegram-link">텔레그램 공지 확인하기</a>
-        </div>
       </div>
 
       <!-- 결과 영역 -->
       <div class="results-column">
-        <div id="resultCpi" class="result-content active"></div>
-        <div id="resultRam" class="result-content"></div>
-        <div id="resultCompound" class="result-content"></div>
-        <div id="promoResult" class="result-content promo-content">
-          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%85%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내" />
+        <div id="resultCompound" class="result-content active">
+          <div id="compoundLeft"></div>
+          <div id="compoundRight"></div>
         </div>
+        <div id="resultRam" class="result-content"></div>
       </div>
     </div>
   </div>
@@ -237,49 +153,36 @@
 
 <script>
 (function init() {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init, { once: true });
-    return;
-  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init, { once:true }); return; }
 
-  /* ===== 탭 전환 ===== */
+  /* 탭 전환 */
   const tabButtons = document.querySelectorAll('.tab-button');
   const inputContents = document.querySelectorAll('.input-column .tab-content');
   const resultContents = document.querySelectorAll('.results-column .result-content');
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const target = button.dataset.tab;
-      tabButtons.forEach(b => b.classList.remove('active'));
-      button.classList.add('active');
-      inputContents.forEach(c => c.classList.remove('active'));
-      resultContents.forEach(c => c.classList.remove('active'));
-      document.getElementById(target + 'Tab').classList.add('active');
-      if (target === 'promo') document.getElementById('promoResult').classList.add('active');
-      else document.getElementById('result' + target.charAt(0).toUpperCase() + target.slice(1)).classList.add('active');
+  tabButtons.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const t=btn.dataset.tab;
+      tabButtons.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      inputContents.forEach(c=>c.classList.remove('active')); resultContents.forEach(c=>c.classList.remove('active'));
+      document.getElementById(t+'Tab').classList.add('active');
+      const resultId='result'+t.charAt(0).toUpperCase()+t.slice(1);
+      const el=document.getElementById(resultId); if(el) el.classList.add('active');
     });
   });
 
-  /* ===== 날짜 셀렉트 ===== */
+  /* 날짜 셀렉트 */
   function populateDateSelects(monthSelect, daySelect, year) {
-    if (!monthSelect || !daySelect) return;
-    if (monthSelect.options.length === 0)
-      for (let i = 1; i <= 12; i++) monthSelect.add(new Option(`${i}월`, i));
-    function updateDays() {
-      daySelect.innerHTML = '';
-      const m = parseInt(monthSelect.value, 10);
-      const daysInMonth = isNaN(m) ? 31 : new Date(year, m, 0).getDate();
-      for (let i = 1; i <= daysInMonth; i++) daySelect.add(new Option(`${i}일`, i));
-    }
-    if (!monthSelect._bound) { monthSelect.addEventListener('change', updateDays); monthSelect._bound = true; }
-    const today = new Date();
-    monthSelect.value = today.getMonth() + 1; updateDays(); daySelect.value = today.getDate();
+    if (!monthSelect||!daySelect) return;
+    if (monthSelect.options.length===0) for(let i=1;i<=12;i++) monthSelect.add(new Option(`${i}월`, i));
+    function updateDays(){ daySelect.innerHTML=''; const m=parseInt(monthSelect.value,10);
+      const d=isNaN(m)?31:new Date(year,m,0).getDate(); for(let i=1;i<=d;i++) daySelect.add(new Option(`${i}일`,i)); }
+    if (!monthSelect._bound){ monthSelect.addEventListener('change',updateDays); monthSelect._bound=true; }
+    const today=new Date(); monthSelect.value=today.getMonth()+1; updateDays(); daySelect.value=today.getDate();
   }
-  populateDateSelects(document.getElementById("cpiInitialMonth"), document.getElementById("cpiInitialDay"), 2025);
-  populateDateSelects(document.getElementById("cpiAdditionalMonth"), document.getElementById("cpiAdditionalDay"), 2025);
   populateDateSelects(document.getElementById("ramStartMonth"), document.getElementById("ramStartDay"), 2025);
   populateDateSelects(document.getElementById("compStartMonth"), document.getElementById("compStartDay"), 2025);
 
-  /* ===== 공통 수식 ===== */
+  /* 수식 */
   const dayBonusTable = [
     {day:81,bonus:1},{day:161,bonus:1.01},{day:240,bonus:1.02},{day:320,bonus:1.03},{day:401,bonus:1.04},{day:480,bonus:1.05},
     {day:561,bonus:1.06},{day:641,bonus:1.07},{day:720,bonus:1.08},{day:801,bonus:1.09},{day:881,bonus:1.1},{day:960,bonus:1.11},
@@ -289,91 +192,62 @@
   ];
   function getDayBonus(d){ let b=1; for(const e of dayBonusTable){ if(d>=e.day) b=e.bonus; else break; } return b; }
   function getBaseRate(i){ if(i<1e3) return .005; if(i<5e3) return .0053; if(i<1e4) return .0055; return .0063; }
-  function getBonusRAM(i,d){ if(d<120||i<1e3) return 0; if(i<=5e3) return i*.1; if(i<=1e4) return i*.15; return i*.2; }
   function getBonusRate(i){ if(i<1e3) return 0; if(i<=5e3) return .0053; if(i<=1e4) return .00578; return .00693; }
+  function getBonusRAM(i,d){ if(d<120||i<1e3) return 0; if(i<=5e3) return i*.1; if(i<=1e4) return i*.15; return i*.2; }
 
-  // 프로모션 기간(가입일 기준) — 이 기간에만 '재예치' 생성
   const PROMO_START = new Date('2025-07-17');
   const PROMO_END   = new Date('2025-12-31');
 
-  /* ===== RAM (단일) ===== */
+  /* RAM 단일 계산기 (참고용) */
   window.calculateRam = function() {
-    const invest = parseFloat(document.getElementById("invest").value) || 0;
-    const days   = parseInt(document.getElementById("days").value) || 0;
+    const invest = parseFloat(document.getElementById("invest").value)||0;
+    const days   = parseInt(document.getElementById("days").value)||0;
     const startMonth = document.getElementById("ramStartMonth").value;
     const startDay   = document.getElementById("ramStartDay").value;
-    const hashBonus  = parseFloat(document.getElementById("hash").value) || 1;
-    const applyRamPromotion = document.getElementById("applyRamPromotion").checked;
-    const resultRamDiv = document.getElementById("resultRam");
-    if (!invest || !days) { resultRamDiv.innerHTML = "<div class='alert-box alert-warning'>모든 값을 입력하세요.</div>"; return; }
+    const hashBonus  = parseFloat(document.getElementById("hash").value)||1;
+    const applyPromo = document.getElementById("applyRamPromotion").checked;
+    const target = document.getElementById("resultRam");
+    if (!invest||!days){ target.innerHTML="<div class='alert-box alert-warning'>모든 값을 입력하세요.</div>"; return; }
 
-    const interestPayingDays = Math.max(0, days - 2);
-    const today = new Date(), startDate = new Date(`2025-${startMonth}-${startDay}`);
-    const diffDays = Math.max(0, Math.floor((today - startDate) / (1000*60*60*24)));
-    const remainDays = Math.max(0, days - diffDays);
-    const interestDaysPassed = Math.max(0, diffDays - 2);
-    const remainingInterestDays = Math.max(0, interestPayingDays - interestDaysPassed);
-
-    let mainRate = getBaseRate(invest);
-    if (applyRamPromotion && invest >= 1000 && days >= 120) mainRate = getBonusRate(invest);
-
-    const daily_main = invest * mainRate * hashBonus * getDayBonus(days);
-    const total_main = daily_main * interestPayingDays;
-    const recov_main = invest > 0 ? invest / daily_main : 0;
-    const sofar_main = daily_main * interestDaysPassed;
-    const remain_main= daily_main * remainingInterestDays;
-
-    let bonusAmt=0, daily_bonus=0, bonus_until_maturity=0, bonus_remaining=0;
-    if (applyRamPromotion && invest >= 1000 && days >= 120) {
+    const startDate = new Date(`2025-${startMonth}-${startDay}`);
+    const interestDays = Math.max(0, days-2);
+    let mainRate = applyPromo && invest>=1000 && days>=120 ? getBonusRate(invest) : getBaseRate(invest);
+    const dailyMain = invest * mainRate * hashBonus * getDayBonus(days);
+    const totalMain = dailyMain * interestDays;
+    let bonusAmt=0, dailyBonus=0, totalBonus=0, remainBonus=0;
+    if (applyPromo && invest>=1000 && days>=120){
       bonusAmt = getBonusRAM(invest, days);
-      daily_bonus = bonusAmt * getBonusRate(invest) * hashBonus * 1.3;
-      bonus_until_maturity = daily_bonus * interestPayingDays;
-      bonus_remaining = daily_bonus * Math.max(0, 2400 - days);
+      dailyBonus = bonusAmt * getBonusRate(invest) * hashBonus * 1.3;
+      totalBonus = dailyBonus * interestDays;
+      remainBonus = dailyBonus * Math.max(0, 2400-days);
     }
+    const alert = (invest/dailyMain>interestDays) ?
+      "<div class='alert-box alert-warning'>🔔 만기 전에 원금 회수가 불가합니다.</div>" :
+      "<div class='alert-box alert-success'>✅ 원금 회수 가능</div>";
 
-    const sofar_total  = (daily_main + daily_bonus) * interestDaysPassed;
-    const remain_total = (daily_main + daily_bonus) * remainingInterestDays;
-    const total_until  = total_main + bonus_until_maturity;
-    const recov_total  = (invest > 0 && (daily_main + daily_bonus) > 0) ? invest / (daily_main + daily_bonus) : 0;
-    const alertMsg = (recov_main > 0 && recov_main > interestPayingDays)
-      ? "<div class='alert-box alert-warning'>🔔 알림: 만기일이 원금 회수 기간보다 짧습니다.</div>"
-      : "<div class='alert-box alert-success'>✅ 원금 회수가 가능합니다.</div>";
-
-    let quick = "";
-    if (remainDays > 0) {
-      const d = daily_main + daily_bonus;
-      quick += `<div class='result-item'>만기일까지 받을 1일 이자: <span class='highlight'>${d.toFixed(2)}</span> USDT</div>`;
-      if (remainDays >= 7)  quick += `<div class='result-item'>만기일까지 받을 1주(7일): <span class='highlight'>${(d*7).toFixed(2)}</span> USDT</div>`;
-      if (remainDays >= 30) quick += `<div class='result-item'>만기일까지 받을 1달(30일): <span class='highlight'>${(d*30).toFixed(2)}</span> USDT</div>`;
-    }
-
-    resultRamDiv.innerHTML = alertMsg + `
-      <div class="result-section main-box"><div class="result-title">[내가 구매한 RAM]</div>
+    target.innerHTML = alert + `
+      <div class="result-section main-box">
+        <div class="result-title">[내가 구매한 RAM]</div>
         <div class="result-item">투자 금액: <span class="highlight">${invest.toFixed(2)}</span> USDT</div>
-        <div class="result-item">일일 이자: <span class="highlight">${daily_main.toFixed(2)}</span> USDT</div>
-        <div class="result-item">총 이자(${interestPayingDays}일): <span class="highlight">${total_main.toFixed(2)}</span> USDT</div>
-        <div class="result-item">원금 회수 예상일: <span class="highlight">약 ${Math.ceil(recov_main)}일</span></div>
-        <div class="result-item">현재까지 받은 총 이자: <span class="highlight">${sofar_main.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일까지 남은 총 이자: <span class="highlight">${remain_main.toFixed(2)}</span> USDT</div>
+        <div class="result-item">일일 이자: <span class="highlight">${dailyMain.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 이자(${interestDays}일): <span class="highlight">${totalMain.toFixed(2)}</span> USDT</div>
+        <div class="result-item">원금 회수 예상: <span class="highlight">약 ${Math.ceil(invest/dailyMain)}일</span></div>
       </div>
-      <div class="result-section bonus-box"><div class="result-title">[프로모션 보너스 RAM]</div>
+      <div class="result-section bonus-box">
+        <div class="result-title">[프로모션 보너스 RAM]</div>
         <div class="result-item">보너스 RAM: <span class="highlight">${bonusAmt.toFixed(2)}</span> USDT</div>
-        <div class="result-item">일일 이자: <span class="highlight">${daily_bonus.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일까지 이자(${interestPayingDays}일): <span class="highlight">${bonus_until_maturity.toFixed(2)}</span> USDT</div>
-        <div class="result-item">남은 기간 이자(${Math.max(0, 2400 - days)}일): <span class="highlight">${bonus_remaining.toFixed(2)}</span> USDT</div>
+        <div class="result-item">일일 이자: <span class="highlight">${dailyBonus.toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기일까지 이자: <span class="highlight">${totalBonus.toFixed(2)}</span> USDT</div>
+        <div class="result-item">남은 기간 이자(${Math.max(0,2400-days)}일): <span class="highlight">${remainBonus.toFixed(2)}</span> USDT</div>
       </div>
-      <div class="result-section total-box"><div class="result-title">[총 합계]</div>
-        <div class="result-item">스테이킹 진행: <span class="highlight">${diffDays}일 경과 / ${remainDays}일 남음</span></div>
-        <div class="result-item">현재까지 받은 총 이자(스테이킹+보너스): <span class="highlight">${sofar_total.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일까지 남은 총 이자(스테이킹+보너스): <span class="highlight">${remain_total.toFixed(2)}</span> USDT</div>
-        <div class="result-item">만기일까지 받는 총 이자(스테이킹+보너스): <span class="highlight">${total_until.toFixed(2)}</span> USDT</div>
-        <div class="result-item">원금 회수 예상(보너스 포함): <span class="highlight">약 ${Math.ceil(recov_total)}일</span></div>
+      <div class="result-section total-box">
+        <div class="result-title">[총 합계]</div>
+        <div class="result-item">만기일까지 받는 총 이자(스테이킹+보너스): <span class="highlight">${(totalMain+totalBonus).toFixed(2)}</span> USDT</div>
       </div>
-      <div class="result-section total-box">${quick}</div>
     `;
   };
 
-  /* ===== RAM 복리 전략 (프로모션 기간 내 재예치 + 왼쪽 2×2, 오른쪽 타임라인) ===== */
+  /* ===== RAM 복리 전략 ===== */
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
@@ -386,87 +260,71 @@
     const applyPromoReinvest = document.getElementById("applyCompPromoReinvest").checked;
     const horizon   = Math.max(1, parseInt(document.getElementById("compHorizon").value) || 2400);
 
-    const resultDiv = document.getElementById("resultCompound");
-    if (!initial || !initDays) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>초기 금액과 기간을 입력하세요.</div>"; return; }
+    const startDate = new Date(`2025-${startMonth}-${startDay}`);
+    if (!initial || !initDays || isNaN(startDate.getTime())) {
+      document.getElementById("compoundLeft").innerHTML  = "<div class='alert-box alert-warning'>입력값을 확인하세요.</div>";
+      document.getElementById("compoundRight").innerHTML = "";
+      return;
+    }
     if (applyPromoReinvest && newStakeDays < 120) newStakeDays = 120;
 
-    const startDate = new Date(`2025-${startMonth}-${startDay}`);
-    if (isNaN(startDate.getTime())) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 시작일을 선택하세요.</div>"; return; }
+    function inPromoWindow(date){ return date >= PROMO_START && date <= PROMO_END; }
 
-    // 포지션 구조
-    const positions = [];
+    // 초기 포지션(초기 상품만 왼쪽에 표시)
+    const initPromo = applyPromoInitial && inPromoWindow(startDate) && initial >= 1000 && initDays >= 120;
+    const initMainRate    = initPromo ? getBonusRate(initial)         : getBaseRate(initial);
+    const initBonusAmount = initPromo ? getBonusRAM(initial, initDays): 0;
+    const initBonusRate   = initPromo ? getBonusRate(initial)         : 0;
+
+    // ---- 재예치 시뮬레이션 ----
     let wallet = 0;
-
-    // 분리 집계
-    const initialPrincipal = initial;
     let reinvestedPrincipal = 0;
-    let initialBonusPrincipal = 0;
     let reinvestedBonusPrincipal = 0;
+    let totalMainInterestRe = 0, totalBonusInterestRe = 0;
+    let dailyMainNowRe = 0, dailyBonusNowRe = 0;
+    let reinvestCount = 0;
 
-    // 타임라인 이벤트
-    const timeline = [];
+    // 보유 포지션: 초기 상품 + 이후 재예치들
+    const positions = [{
+      amount: initial,
+      startDayIndex: 0,
+      mainDays: initDays,
+      mainRate: initMainRate,
+      bonusAmount: initBonusAmount,
+      bonusRate: initBonusRate
+    }];
 
-    // 누적 이자(초기/재예치 × 메인/보너스)
-    let totalMainInterestInit = 0, totalMainInterestRe = 0;
-    let totalBonusInterestInit = 0, totalBonusInterestRe = 0;
-
-    // 프로모션 기간 체크
-    function inPromoWindow(date) { return date >= PROMO_START && date <= PROMO_END; }
-
-    // 초기 포지션 생성
-    const initSubscribeDate = new Date(startDate);
-    const initPromo = applyPromoInitial && inPromoWindow(initSubscribeDate) && initial >= 1000 && initDays >= 120;
-    const initMainRate   = initPromo ? getBonusRate(initial)         : getBaseRate(initial);
-    const initBonusAmount= initPromo ? getBonusRAM(initial,initDays) : 0;
-    const initBonusRate  = initPromo ? getBonusRate(initial)         : 0;
-    if (initBonusAmount > 0) initialBonusPrincipal += initBonusAmount;
-
-    positions.push({
-      amount: initial, startDayIndex: 0, startDate: new Date(initSubscribeDate),
-      mainDays: initDays, mainRate: initMainRate,
-      bonusAmount: initBonusAmount, bonusRate: initBonusRate, promoApplied: initPromo
-    });
-
-    // 직전 가입일 인덱스(초기=0)
-    let lastEventDayIndex = 0;
-
-    // 일 단위 시뮬레이션
     for (let day = 0; day < horizon; day++) {
-      let dMainInit=0, dMainRe=0, dBonusInit=0, dBonusRe=0;
+      let dayMainRe = 0, dayBonusRe = 0;
 
+      // 각 포지션에서 오늘 발생 이자
       for (const p of positions) {
         const age = day - p.startDayIndex;
         if (age < 0) continue;
-        const isInitial = (p.startDayIndex === 0);
 
         // 메인 단리: D+2 ~ mainDays-1
         if (age >= 2 && age < p.mainDays) {
           const v = p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
-          if (isInitial) dMainInit += v; else dMainRe += v;
+          // 초기 포지션은 왼쪽 카드에서만 보여주므로 재예치 집계에는 포함하지 않음
+          if (p.startDayIndex !== 0) dayMainRe += v;
+          wallet += v; // 지갑에 모음
         }
         // 보너스 단리: D+2 ~ 2400-1
         if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
           const v = p.bonusAmount * p.bonusRate * hashBonus * 1.3;
-          if (isInitial) dBonusInit += v; else dBonusRe += v;
+          if (p.startDayIndex !== 0) dayBonusRe += v;
+          wallet += v;
         }
       }
 
-      // 누적
-      totalMainInterestInit  += dMainInit;
-      totalMainInterestRe    += dMainRe;
-      totalBonusInterestInit += dBonusInit;
-      totalBonusInterestRe   += dBonusRe;
+      totalMainInterestRe  += dayMainRe;
+      totalBonusInterestRe += dayBonusRe;
 
-      // 지갑 적립
-      wallet += (dMainInit + dMainRe + dBonusInit + dBonusRe);
-
-      // 임계치 도달 → 같은 날 가입 (단, 프로모션 기간 내에서만 재예치 생성)
-      if (wallet >= threshold) {
-        const stakeAmt = wallet; wallet = 0;
-
-        const subscribeDate = new Date(startDate);
-        subscribeDate.setDate(startDate.getDate() + day);
-        const waitDays = day - lastEventDayIndex;
+      // 재예치: 같은 날에도 threshold 여러 번 충족하면 여러 건 생성
+      const subscribeDate = new Date(startDate); subscribeDate.setDate(startDate.getDate() + day);
+      while (wallet >= threshold) {
+        const stakeAmt = threshold; // 동일 금액 반복
+        wallet -= threshold;
 
         const promoOk = applyPromoReinvest && inPromoWindow(subscribeDate) && stakeAmt >= 1000 && newStakeDays >= 120;
         const mainRateNew  = promoOk ? getBonusRate(stakeAmt) : getBaseRate(stakeAmt);
@@ -474,219 +332,98 @@
         const bonusRateNew = promoOk ? getBonusRate(stakeAmt) : 0;
 
         positions.push({
-          amount: stakeAmt, startDayIndex: day, startDate: new Date(subscribeDate),
+          amount: stakeAmt, startDayIndex: day,
           mainDays: newStakeDays, mainRate: mainRateNew,
-          bonusAmount: bonusAmtNew, bonusRate: bonusRateNew, promoApplied: promoOk
+          bonusAmount: bonusAmtNew, bonusRate: bonusRateNew
         });
 
         reinvestedPrincipal += stakeAmt;
-        if (bonusAmtNew > 0) reinvestedBonusPrincipal += bonusAmtNew;
-
-        const dayFactorMain = getDayBonus(newStakeDays);
-        const daily_main_new = stakeAmt * mainRateNew * hashBonus * dayFactorMain;
-        const daily_bonus_new = bonusAmtNew > 0 ? (bonusAmtNew * bonusRateNew * hashBonus * 1.3) : 0;
-
-        timeline.push({
-          idx: timeline.length + 1,
-          subscribeDate: subscribeDate.toISOString().slice(0,10),
-          waitDays,
-          amount: stakeAmt,
-          days: newStakeDays,
-          promo: promoOk,
-          dailyMain: daily_main_new,
-          dailyBonus: daily_bonus_new
-        });
-
-        lastEventDayIndex = day;
+        reinvestedBonusPrincipal += bonusAmtNew;
+        reinvestCount++;
       }
     }
 
-    // 스냅샷 (오늘 = horizon-1 인덱스)
-    const todayIndex = Math.max(0, horizon - 1);
-    let dailyMainNowInit = 0, dailyMainNowRe = 0, dailyBonusNowInit = 0, dailyBonusNowRe = 0, activeMainPositions=0;
+    // 오늘(시뮬레이션 마지막 날) 스냅샷: 재예치 포지션의 1일 이자
+    const todayIndex = horizon - 1;
     for (const p of positions) {
+      if (p.startDayIndex === 0) continue; // 초기 제외
       const age = todayIndex - p.startDayIndex;
-      const isInitial = (p.startDayIndex === 0);
       if (age >= 2 && age < p.mainDays) {
-        const v = p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
-        if (isInitial) dailyMainNowInit += v; else dailyMainNowRe += v;
-        activeMainPositions++;
+        dailyMainNowRe += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
       }
       if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
-        const v = p.bonusAmount * p.bonusRate * hashBonus * 1.3;
-        if (isInitial) dailyBonusNowInit += v; else dailyBonusNowRe += v;
+        dailyBonusNowRe += p.bonusAmount * p.bonusRate * hashBonus * 1.3;
       }
     }
 
-    const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + horizon);
+    // ---- 왼쪽 2×2: 초기 상품(원래 상품) 결과 ----
+    const today = new Date();
+    const diffDaysInit   = Math.max(0, Math.floor((today - startDate) / (1000*60*60*24)));
+    const remainDaysInit = Math.max(0, initDays - diffDaysInit);
+    const interestDaysInit = Math.max(0, initDays - 2);
 
-    // 왼쪽 2×2
-    const leftGridHtml = `
+    const dailyMainInit = initial * initMainRate * hashBonus * getDayBonus(initDays);
+    const totalMainInit = dailyMainInit * interestDaysInit;
+    const sofarMainInit = dailyMainInit * Math.max(0, Math.min(diffDaysInit - 2, interestDaysInit));
+    const recovDaysInit = initial > 0 ? initial / dailyMainInit : 0;
+
+    const dailyBonusInit = initBonusAmount > 0 ? initBonusAmount * initBonusRate * hashBonus * 1.3 : 0;
+    const totalBonusInitToMaturity = dailyBonusInit * interestDaysInit;
+    const remainBonusInitAfterMaturity = dailyBonusInit * Math.max(0, 2400 - initDays);
+    const sofarBonusInit = initBonusAmount > 0 ? dailyBonusInit * Math.max(0, Math.min(diffDaysInit - 2, 2400)) : 0;
+
+    const leftHtml = `
       <div class="result-section main-box">
         <div class="result-title">[초기 상품 - 메인]</div>
-        <div class="result-item">금액/기간: <span class="highlight">${initialPrincipal.toFixed(2)} USDT / ${initDays}일</span></div>
+        <div class="result-item">금액/기간: <span class="highlight">${initial.toFixed(2)} USDT / ${initDays}일</span></div>
         <div class="result-item">프로모션: <span class="highlight">${initPromo ? '적용' : '미적용'}</span></div>
-        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyMainNowInit.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 이자: <span class="highlight">${totalMainInterestInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">일일 이자: <span class="highlight">${dailyMainInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">총 이자(${interestDaysInit}일): <span class="highlight">${totalMainInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">원금 회수 예상: <span class="highlight">약 ${Math.ceil(recovDaysInit)}일</span></div>
       </div>
 
       <div class="result-section bonus-box">
         <div class="result-title">[초기 상품 - 보너스]</div>
-        <div class="result-item">보너스 RAM 금액: <span class="highlight">${initialBonusPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyBonusNowInit.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 이자: <span class="highlight">${totalBonusInterestInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">보너스 RAM: <span class="highlight">${initBonusAmount.toFixed(2)}</span> USDT</div>
+        <div class="result-item">일일 이자: <span class="highlight">${dailyBonusInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기까지 이자(${interestDaysInit}일): <span class="highlight">${totalBonusInitToMaturity.toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기 이후 남은 이자(${Math.max(0,2400-initDays)}일): <span class="highlight">${remainBonusInitAfterMaturity.toFixed(2)}</span> USDT</div>
       </div>
 
+      <div class="result-section total-box">
+        <div class="result-title">[초기 상품 - 합계]</div>
+        <div class="result-item">오늘 1일 총 이자(메인+보너스): <span class="highlight">${(dailyMainInit+dailyBonusInit).toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기까지 총 이자(메인+보너스): <span class="highlight">${(totalMainInit+totalBonusInitToMaturity).toFixed(2)}</span> USDT</div>
+        <div class="result-item">만기 이후 보너스 이자: <span class="highlight">${remainBonusInitAfterMaturity.toFixed(2)}</span> USDT</div>
+      </div>
+
+      <div class="result-section total-box">
+        <div class="result-title">[진행 상황]</div>
+        <div class="result-item">경과/잔여: <span class="highlight">${diffDaysInit}</span>일 경과 / <span class="highlight">${remainDaysInit}</span>일 남음</div>
+        <div class="result-item">현재까지 받은 이자(메인/보너스): <span class="highlight">${sofarMainInit.toFixed(2)} / ${sofarBonusInit.toFixed(2)}</span> USDT</div>
+      </div>
+    `;
+
+    // ---- 오른쪽: 재예치 요약 ----
+    const rightHtml = `
       <div class="result-section main-box">
-        <div class="result-title">[재예치 상품 - 메인(합산)]</div>
-        <div class="result-item">재예치 누적 금액: <span class="highlight">${reinvestedPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyMainNowRe.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 이자: <span class="highlight">${totalMainInterestRe.toFixed(2)}</span> USDT</div>
-      </div>
-
-      <div class="result-section bonus-box">
-        <div class="result-title">[재예치 상품 - 보너스(합산)]</div>
-        <div class="result-item">보너스 RAM 금액: <span class="highlight">${reinvestedBonusPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyBonusNowRe.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 이자: <span class="highlight">${totalBonusInterestRe.toFixed(2)}</span> USDT</div>
+        <div class="result-title">[재예치 요약]</div>
+        <div class="result-item">재예치 횟수: <span class="highlight">${reinvestCount}</span> 회</div>
+        <div class="result-item">재예치 총 원금: <span class="highlight">${reinvestedPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">보너스 RAM 총합: <span class="highlight">${reinvestedBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">오늘 1일 이자(재예치): <span class="highlight">${(dailyMainNowRe+dailyBonusNowRe).toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 이자(재예치): <span class="highlight">${(totalMainInterestRe+totalBonusInterestRe).toFixed(2)}</span> USDT</div>
+        <div class="result-item">지갑 잔액(미재예치 이자): <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
       </div>
     `;
 
-    // 타임라인
-    const timelineControls = `
-      <div class="actions">
-        <button id="btnTlCollapse" type="button">모두 접기</button>
-        <button id="btnTlExpand" type="button">모두 펼치기</button>
-      </div>
-    `;
-    const timelineHtml = timeline.length === 0
-      ? `<div class="tl-item"><div class="tl-body">임계치(${threshold} USDT)에 도달하지 않아 재예치가 발생하지 않았습니다.</div></div>`
-      : timeline.map(t => `
-          <div class="tl-item">
-            <details class="tl-acc" open>
-              <summary>
-                #${t.idx} 재예치
-                <span class="chip">${t.subscribeDate}</span>
-                ${t.promo ? '<span class="chip">프로모션</span>' : ''}
-                <span class="chip">${t.amount.toFixed(2)} USDT / ${t.days}일</span>
-              </summary>
-              <div class="tl-body">
-                <div class="result-item">이자 모은 기간: <span class="highlight">${t.waitDays}</span>일</div>
-                <div class="result-item">일일 이자(메인/보너스): <span class="highlight">${t.dailyMain.toFixed(2)} / ${t.dailyBonus.toFixed(2)}</span> USDT</div>
-              </div>
-            </details>
-          </div>
-        `).join('');
-
-    const rightColHtml = `
-      <div class="timeline">
-        <div class="tl-title">재예치 타임라인 (임계치 ${threshold} USDT 도달 시 가입)</div>
-        ${timeline.length ? timelineControls : ''}
-        ${timelineHtml}
-      </div>
-      <div class="result-section total-box" style="margin-top:16px;">
-        <div class="result-title">[요약]</div>
-        <div class="result-item">시뮬레이션 기간: <span class="highlight">${horizon}</span>일 (${startDate.toISOString().slice(0,10)} ~ ${endDate.toISOString().slice(0,10)})</div>
-        <div class="result-item">현재 1일 총 이자(초기+재예치, 메인+보너스): <span class="highlight">${(dailyMainNowInit+dailyMainNowRe+dailyBonusNowInit+dailyBonusNowRe).toFixed(2)}</span> USDT</div>
-        <div class="result-item">활성 포지션 수(메인 기준): <span class="highlight">${activeMainPositions}</span> 개</div>
-        <div class="result-item">지갑(미재예치 이자) 잔액: <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
-      </div>
-    `;
-
-    const resultHtml = `
-      <div class="compound-grid">
-        <div class="compound-left">${leftGridHtml}</div>
-        <div class="compound-right">${rightColHtml}</div>
-      </div>
-    `;
-
-    const resultDivEl = document.getElementById("resultCompound");
-    resultDivEl.innerHTML = resultHtml;
-
-    // 타임라인 모두 접기/펼치기
-    const btnCol = document.getElementById('btnTlCollapse');
-    const btnExp = document.getElementById('btnTlExpand');
-    if (btnCol) btnCol.addEventListener('click', () => {
-      resultDivEl.querySelectorAll('.tl-acc').forEach(d => d.open = false);
-    });
-    if (btnExp) btnExp.addEventListener('click', () => {
-      resultDivEl.querySelectorAll('.tl-acc').forEach(d => d.open = true);
-    });
-  };
-
-  /* ===== CPI (간단) — 그대로 유지 ===== */
-  window.calculateCpiGrowth = function() {
-    const initialInvest = parseFloat(document.getElementById("initialInvest").value) || 0;
-    const iMonth = document.getElementById("cpiInitialMonth").value, iDay = document.getElementById("cpiInitialDay").value;
-    const initialDate = new Date(`2025-${iMonth}-${iDay}`);
-    const additionalInvest = parseFloat(document.getElementById("additionalInvest").value) || 0;
-    const aMonth = document.getElementById("cpiAdditionalMonth").value, aDay = document.getElementById("cpiAdditionalDay").value;
-    const additionalDate = new Date(`2025-${aMonth}-${aDay}`);
-    const applyPromo = document.getElementById("applyCpiPromotion").checked;
-    const resultCpiDiv = document.getElementById("resultCpi");
-
-    if (!initialInvest && !additionalInvest) { resultCpiDiv.innerHTML = ""; return; }
-    if ((initialInvest > 0 && isNaN(initialDate.getTime())) || (additionalInvest > 0 && isNaN(additionalDate.getTime()))) {
-      resultCpiDiv.innerHTML = "<div class='alert-box alert-warning'>유효한 날짜를 선택해주세요.</div>"; return;
-    }
-
-    const today = new Date();
-    const bonusAmount = (applyPromo && additionalInvest >= 1000) ? additionalInvest * 0.10 : 0;
-    const dailyYieldRate = 0.01, promoDailyYieldRate = 0.02, reinvestCycleDays = 7, minReinvestAmount = 50;
-
-    let earliestDate;
-    if (initialInvest > 0 && additionalInvest > 0) earliestDate = new Date(Math.min(initialDate, additionalDate));
-    else if (initialInvest > 0) earliestDate = initialDate; else earliestDate = additionalDate;
-
-    const daysPassedSinceStart = Math.max(0, Math.floor((today - earliestDate) / (1000*60*60*24)));
-    let todayCPI = 0, todayAccumulated = 0, totalBonusInterestReleased = 0;
-
-    for (let day = 0; day <= daysPassedSinceStart; day++) {
-      const currentDate = new Date(earliestDate);
-      currentDate.setDate(earliestDate.getDate() + day);
-      if (initialInvest   > 0 && currentDate.getTime() === initialDate.getTime())   todayCPI += initialInvest;
-      if (additionalInvest> 0 && currentDate.getTime() === additionalDate.getTime()) todayCPI += additionalInvest;
-
-      const dailyInterestFromCPI = todayCPI * dailyYieldRate;
-      let dailyInterestFromBonus = 0;
-      if (bonusAmount > 0 && currentDate >= additionalDate) {
-        dailyInterestFromBonus = bonusAmount * promoDailyYieldRate;
-        totalBonusInterestReleased += dailyInterestFromBonus;
-      }
-      todayAccumulated += (dailyInterestFromCPI + dailyInterestFromBonus);
-
-      if ((day + 1) % reinvestCycleDays === 0 && todayAccumulated >= minReinvestAmount) {
-        todayCPI += todayAccumulated; todayAccumulated = 0;
-      }
-    }
-
-    const dailyBonusInterestToday = (bonusAmount > 0 && today >= additionalDate) ? bonusAmount * promoDailyYieldRate : 0;
-    const currentTotalDailyInterest = (todayCPI * dailyYieldRate) + dailyBonusInterestToday;
-
-    resultCpiDiv.innerHTML = `
-      <div class='result-section cpi-main-box'>
-        <div class='result-title'>[내가 스테이킹한 CPI]</div>
-        <div class='result-item'>기존 입금액: <span class='highlight'>${initialInvest.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>추가 입금액: <span class='highlight'>${additionalInvest.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>오늘 기준 총 CPI: <span class='highlight'>${todayCPI.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>1일 총 해제량: <span class='highlight'>${currentTotalDailyInterest.toFixed(2)}</span> USDT</div>
-        <div class='result-item'>1주일 총 해제량: <span class='highlight'>${(currentTotalDailyInterest * 7).toFixed(2)}</span> USDT</div>
-      </div>
-      <div class='result-section cpi-bonus-box'>
-        <div class='result-title'>[프로모션 보너스 USDL]</div>
-        <div class='result-item'>보너스 USDL 금액: <span class='highlight'>${bonusAmount.toFixed(2)}</span> USDT (고정)</div>
-        <div class='result-item'>총 해제된 보너스: <span class='highlight'>${totalBonusInterestReleased.toFixed(2)}</span> USDT</div>
-      </div>
-    `;
+    document.getElementById("compoundLeft").innerHTML  = leftHtml;
+    document.getElementById("compoundRight").innerHTML = rightHtml;
   };
 
   // 버튼 바인딩
-  const btnCpi = document.getElementById('btnCpi');
-  const btnRam = document.getElementById('btnRam');
-  const btnCompound = document.getElementById('btnCompound');
-  if (btnCpi)      btnCpi.addEventListener('click', () => { try { window.calculateCpiGrowth(); } catch(e){ console.error(e); } });
-  if (btnRam)      btnRam.addEventListener('click', () => { try { window.calculateRam(); } catch(e){ console.error(e); } });
-  if (btnCompound) btnCompound.addEventListener('click', () => { try { window.simulateCompoundRam(); } catch(e){ console.error(e); } });
+  document.getElementById('btnCompound').addEventListener('click', () => { try { simulateCompoundRam(); } catch(e){ console.error(e); } });
+  document.getElementById('btnRam').addEventListener('click', () => { try { calculateRam(); } catch(e){ console.error(e); } });
 })();
 </script>
 </body>
