@@ -5,30 +5,21 @@
 <title>Sollong 통합 계산기</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-  body {
-    font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
-    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); color: #e0e6f0;
-  }
+  body { font-family: 'Arial', sans-serif; margin: 30px auto; padding: 0 20px;
+    background: linear-gradient(135deg, #0e0e1e, #1a0f2b); color: #e0e6f0; }
   .container { width: 100%; max-width: 1200px; margin: 0 auto; }
-  .card {
-    background: #1e1430; padding: 25px; border-radius: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    border: 1px solid #8c7eff33; box-sizing: border-box;
-  }
+  .card { background: #1e1430; padding: 25px; border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6); border: 1px solid #8c7eff33; box-sizing: border-box; }
   .calculator-wrapper { display: flex; gap: 25px; }
   .input-column, .results-column { flex: 1; min-width: 0; }
   .results-column { background: #120c24; padding: 20px; border-radius: 15px; }
   .tabs { display: flex; margin-bottom: 25px; }
-  .tab-button {
-    flex: 1; padding: 12px 0; background: #120c24; border: 1px solid #8c7eff33;
-    color: #c9d2e0; font-size: 17px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
-  }
+  .tab-button { flex: 1; padding: 12px 0; background: #120c24; border: 1px solid #8c7eff33;
+    color: #c9d2e0; font-size: 17px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
   .tab-button:first-child { border-radius: 12px 0 0 12px; }
   .tab-button:last-child  { border-radius: 0 12px 12px 0; }
-  .tab-button.active {
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff;
-    box-shadow: 0 3px 10px rgba(140,126,255,0.4);
-  }
+  .tab-button.active { background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff;
+    box-shadow: 0 3px 10px rgba(140,126,255,0.4); }
   .tab-content, .result-content { display: none; }
   .tab-content.active, .result-content.active { display: block; }
   .promo-content img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; border-radius: 10px; }
@@ -37,22 +28,16 @@
   h2, h3 { text-align: center; color: #8c7eff; margin-bottom: 25px; text-shadow: 0 0 5px rgba(140,126,255,0.5); }
   h2 { font-size: 28px; margin-top: 0; } h3 { font-size: 22px; text-align: left; }
   label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #c9d2e0; }
-  input[type="number"], select {
-    width: 100%; padding: 12px 15px; border: 1px solid #8c7eff55;
-    border-radius: 10px; background: #120c24; color: #e0e6f0; box-sizing: border-box;
-  }
+  input[type="number"], select { width: 100%; padding: 12px 15px; border: 1px solid #8c7eff55;
+    border-radius: 10px; background: #120c24; color: #e0e6f0; box-sizing: border-box; }
   .date-select-group { display: flex; gap: 10px; margin-top: 5px; }
-  .promo-checkbox {
-    display: flex; align-items: center; margin-top: 20px; padding: 10px;
-    background: #120c24; border-radius: 8px; cursor: pointer;
-  }
+  .promo-checkbox { display: flex; align-items: center; margin-top: 20px; padding: 10px;
+    background: #120c24; border-radius: 8px; cursor: pointer; }
   .promo-checkbox input { width: 18px; height: 18px; margin-right: 12px; }
-  button, .telegram-link {
-    display: block; text-align: center; margin-top: 30px; width: 100%; padding: 16px; 
-    background: linear-gradient(45deg, #8c7eff, #6a4ef7);
-    color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
-    cursor: pointer; transition: all 0.3s ease; text-decoration: none;
-  }
+  button, .telegram-link { display: block; text-align: center; margin-top: 30px; width: 100%; padding: 16px; 
+    background: linear-gradient(45deg, #8c7eff, #6a4ef7); color: #fff; font-size: 18px; font-weight: bold; border: none; border-radius: 12px;
+    cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+
   .result-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   #promoResult.active { display: block; }
   .result-section { margin-bottom: 0; padding: 20px; border-radius: 15px; border: 1px solid; }
@@ -69,19 +54,28 @@
   .alert-box { padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; grid-column: 1 / -1; margin-bottom: 0; }
   .alert-warning { background: #3a1a1a; color: #ff6b6b; border: 1px solid #ff4d4d; }
   .alert-success { background: #1a3a1a; color: #6bff6b; border: 1px solid #4dff4d; }
+
   /* 클릭 가림 방지 */
   .input-column { position: relative; z-index: 2; }
   .results-column { position: relative; z-index: 1; }
 
+  /* ===== 복리 전략 레이아웃: 좌측(2×2 그리드) | 우측(타임라인) ===== */
+  #resultCompound.active { display: block; }
+  .compound-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+  .compound-left { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .compound-right { display: block; }
+  @media (max-width: 1100px) {
+    .compound-grid { grid-template-columns: 1fr; }
+    .compound-left { grid-template-columns: 1fr; }
+  }
+
   /* ===== 타임라인 아코디언 ===== */
-  .timeline { grid-column: 1 / -1; background:#1a1730; border:1px solid #3a2f6b; border-radius: 12px; padding: 16px; }
+  .timeline { background:#1a1730; border:1px solid #3a2f6b; border-radius: 12px; padding: 16px; }
   .timeline .tl-title { font-weight: bold; color: #b5a8ff; margin-bottom: 10px; }
   .timeline .tl-item { background: #151234; border: 1px solid #3a2f6b; border-radius: 10px; margin: 10px 0; }
   .timeline details { padding: 8px 12px; }
-  .timeline summary {
-    cursor: pointer; list-style: none; outline: none; font-weight: 600; color: #cfc8ff;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-  }
+  .timeline summary { cursor: pointer; list-style: none; outline: none; font-weight: 600; color: #cfc8ff;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .timeline summary::-webkit-details-marker { display:none; }
   .timeline .chip { display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid #8c7eff66; font-size:12px; }
   .timeline .tl-body { padding: 8px 4px 12px 4px; }
@@ -213,7 +207,7 @@
             <li><strong>참여방법:</strong> RAM 단일 예치, 최소 120일, 1000 USDT 이상</li>
             <li><strong>구간 보너스 안내(120일 이상 예치):</strong>
               <ul>
-                <li>1001~5000: 보상률 0.53% / 2400일 할당의 10% 보너스 RAM</li>
+                <li>1001~5000: 0.53% / 2400일 할당의 10% 보너스 RAM</li>
                 <li>5001~10000: 0.578% / 15%</li>
                 <li>10001~: 0.693% / 20%</li>
               </ul>
@@ -234,7 +228,7 @@
         <div id="resultRam" class="result-content"></div>
         <div id="resultCompound" class="result-content"></div>
         <div id="promoResult" class="result-content promo-content">
-          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내" />
+          <img src="https://raw.githubusercontent.com/apoora404/ram/refs/heads/main/%E1%84%89%E1%85%A9%E1%86%AF%E1%84%85%E1%85%A9%E1%86%BC_25_%E1%84%92%E1%85%A1%E1%84%87%E1%85%A1%E1%86%AB%E1%84%80%E1%85%B5_%E1%85%92%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%BC_%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%84%86%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB.png" alt="프로모션 안내" />
         </div>
       </div>
     </div>
@@ -242,34 +236,30 @@
 </div>
 
 <script>
-/* 레디스테이트-세이프 초기화 */
 (function init() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once: true });
     return;
   }
 
-  // 탭 전환
+  /* ===== 탭 전환 ===== */
   const tabButtons = document.querySelectorAll('.tab-button');
   const inputContents = document.querySelectorAll('.input-column .tab-content');
   const resultContents = document.querySelectorAll('.results-column .result-content');
-
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const target = button.dataset.tab;
       tabButtons.forEach(b => b.classList.remove('active'));
       button.classList.add('active');
-
       inputContents.forEach(c => c.classList.remove('active'));
       resultContents.forEach(c => c.classList.remove('active'));
-
       document.getElementById(target + 'Tab').classList.add('active');
       if (target === 'promo') document.getElementById('promoResult').classList.add('active');
       else document.getElementById('result' + target.charAt(0).toUpperCase() + target.slice(1)).classList.add('active');
     });
   });
 
-  // 날짜 선택 초기화
+  /* ===== 날짜 셀렉트 ===== */
   function populateDateSelects(monthSelect, daySelect, year) {
     if (!monthSelect || !daySelect) return;
     if (monthSelect.options.length === 0)
@@ -289,7 +279,7 @@
   populateDateSelects(document.getElementById("ramStartMonth"), document.getElementById("ramStartDay"), 2025);
   populateDateSelects(document.getElementById("compStartMonth"), document.getElementById("compStartDay"), 2025);
 
-  // 공통 헬퍼 (RAM 계산기 원식)
+  /* ===== 공통 수식 ===== */
   const dayBonusTable = [
     {day:81,bonus:1},{day:161,bonus:1.01},{day:240,bonus:1.02},{day:320,bonus:1.03},{day:401,bonus:1.04},{day:480,bonus:1.05},
     {day:561,bonus:1.06},{day:641,bonus:1.07},{day:720,bonus:1.08},{day:801,bonus:1.09},{day:881,bonus:1.1},{day:960,bonus:1.11},
@@ -302,11 +292,11 @@
   function getBonusRAM(i,d){ if(d<120||i<1e3) return 0; if(i<=5e3) return i*.1; if(i<=1e4) return i*.15; return i*.2; }
   function getBonusRate(i){ if(i<1e3) return 0; if(i<=5e3) return .0053; if(i<=1e4) return .00578; return .00693; }
 
-  // 프로모션 기간 (가입일 기준)
+  // 프로모션 기간(가입일 기준) — 이 기간에만 '재예치' 생성
   const PROMO_START = new Date('2025-07-17');
   const PROMO_END   = new Date('2025-12-31');
 
-  // ============== RAM (단일) ==============
+  /* ===== RAM (단일) ===== */
   window.calculateRam = function() {
     const invest = parseFloat(document.getElementById("invest").value) || 0;
     const days   = parseInt(document.getElementById("days").value) || 0;
@@ -383,7 +373,7 @@
     `;
   };
 
-  // ============== RAM 복리 전략 (타임라인 + 아코디언/모두접기펼치기) ==============
+  /* ===== RAM 복리 전략 (프로모션 기간 내 재예치 + 왼쪽 2×2, 오른쪽 타임라인) ===== */
   window.simulateCompoundRam = function () {
     const initial = parseFloat(document.getElementById("compInitial").value) || 0;
     const initDays = parseInt(document.getElementById("compDays").value) || 0;
@@ -391,10 +381,10 @@
     const startDay   = document.getElementById("compStartDay").value;
     const hashBonus  = parseFloat(document.getElementById("compHash").value) || 1;
     const threshold  = Math.max(0, parseFloat(document.getElementById("compThreshold").value) || 1001);
-    let newStakeDays = parseInt(document.getElementById("compNewDays").value) || 120;
+    let   newStakeDays = parseInt(document.getElementById("compNewDays").value) || 120;
     const applyPromoInitial  = document.getElementById("applyCompPromoInitial").checked;
     const applyPromoReinvest = document.getElementById("applyCompPromoReinvest").checked;
-    const horizon = Math.max(1, parseInt(document.getElementById("compHorizon").value) || 2400);
+    const horizon   = Math.max(1, parseInt(document.getElementById("compHorizon").value) || 2400);
 
     const resultDiv = document.getElementById("resultCompound");
     if (!initial || !initDays) { resultDiv.innerHTML = "<div class='alert-box alert-warning'>초기 금액과 기간을 입력하세요.</div>"; return; }
@@ -416,10 +406,14 @@
     // 타임라인 이벤트
     const timeline = [];
 
+    // 누적 이자(초기/재예치 × 메인/보너스)
+    let totalMainInterestInit = 0, totalMainInterestRe = 0;
+    let totalBonusInterestInit = 0, totalBonusInterestRe = 0;
+
     // 프로모션 기간 체크
     function inPromoWindow(date) { return date >= PROMO_START && date <= PROMO_END; }
 
-    // 초기 포지션
+    // 초기 포지션 생성
     const initSubscribeDate = new Date(startDate);
     const initPromo = applyPromoInitial && inPromoWindow(initSubscribeDate) && initial >= 1000 && initDays >= 120;
     const initMainRate   = initPromo ? getBonusRate(initial)         : getBaseRate(initial);
@@ -433,35 +427,40 @@
       bonusAmount: initBonusAmount, bonusRate: initBonusRate, promoApplied: initPromo
     });
 
-    // 누적 이자
-    let totalMainInterest=0, totalBonusInterest=0;
-
     // 직전 가입일 인덱스(초기=0)
     let lastEventDayIndex = 0;
 
     // 일 단위 시뮬레이션
     for (let day = 0; day < horizon; day++) {
-      let dailyMain=0, dailyBonus=0;
+      let dMainInit=0, dMainRe=0, dBonusInit=0, dBonusRe=0;
 
       for (const p of positions) {
         const age = day - p.startDayIndex;
         if (age < 0) continue;
+        const isInitial = (p.startDayIndex === 0);
 
         // 메인 단리: D+2 ~ mainDays-1
         if (age >= 2 && age < p.mainDays) {
-          dailyMain += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
+          const v = p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
+          if (isInitial) dMainInit += v; else dMainRe += v;
         }
         // 보너스 단리: D+2 ~ 2400-1
         if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
-          dailyBonus += p.bonusAmount * p.bonusRate * hashBonus * 1.3;
+          const v = p.bonusAmount * p.bonusRate * hashBonus * 1.3;
+          if (isInitial) dBonusInit += v; else dBonusRe += v;
         }
       }
 
-      totalMainInterest  += dailyMain;
-      totalBonusInterest += dailyBonus;
-      wallet += (dailyMain + dailyBonus);
+      // 누적
+      totalMainInterestInit  += dMainInit;
+      totalMainInterestRe    += dMainRe;
+      totalBonusInterestInit += dBonusInit;
+      totalBonusInterestRe   += dBonusRe;
 
-      // 임계치 도달 → 같은 날 가입 이벤트
+      // 지갑 적립
+      wallet += (dMainInit + dMainRe + dBonusInit + dBonusRe);
+
+      // 임계치 도달 → 같은 날 가입 (단, 프로모션 기간 내에서만 재예치 생성)
       if (wallet >= threshold) {
         const stakeAmt = wallet; wallet = 0;
 
@@ -502,35 +501,64 @@
       }
     }
 
-    // 스냅샷
+    // 스냅샷 (오늘 = horizon-1 인덱스)
     const todayIndex = Math.max(0, horizon - 1);
-    let dailyMainNow=0, dailyBonusNow=0, activeMainPositions=0;
+    let dailyMainNowInit = 0, dailyMainNowRe = 0, dailyBonusNowInit = 0, dailyBonusNowRe = 0, activeMainPositions=0;
     for (const p of positions) {
       const age = todayIndex - p.startDayIndex;
+      const isInitial = (p.startDayIndex === 0);
       if (age >= 2 && age < p.mainDays) {
-        dailyMainNow += p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
+        const v = p.amount * p.mainRate * hashBonus * getDayBonus(p.mainDays);
+        if (isInitial) dailyMainNowInit += v; else dailyMainNowRe += v;
         activeMainPositions++;
       }
       if (p.bonusAmount > 0 && age >= 2 && age < 2400) {
-        dailyBonusNow += p.bonusAmount * p.bonusRate * hashBonus * 1.3;
+        const v = p.bonusAmount * p.bonusRate * hashBonus * 1.3;
+        if (isInitial) dailyBonusNowInit += v; else dailyBonusNowRe += v;
       }
     }
-    const dailyNow = dailyMainNow + dailyBonusNow;
-
-    // 총계
-    const totalPrincipal = initialPrincipal + reinvestedPrincipal;
-    const totalBonusPrincipal = initialBonusPrincipal + reinvestedBonusPrincipal;
 
     const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + horizon);
 
-    // 타임라인 HTML (아코디언 + 모두 접기/펼치기)
+    // 왼쪽 2×2
+    const leftGridHtml = `
+      <div class="result-section main-box">
+        <div class="result-title">[초기 상품 - 메인]</div>
+        <div class="result-item">금액/기간: <span class="highlight">${initialPrincipal.toFixed(2)} USDT / ${initDays}일</span></div>
+        <div class="result-item">프로모션: <span class="highlight">${initPromo ? '적용' : '미적용'}</span></div>
+        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyMainNowInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 이자: <span class="highlight">${totalMainInterestInit.toFixed(2)}</span> USDT</div>
+      </div>
+
+      <div class="result-section bonus-box">
+        <div class="result-title">[초기 상품 - 보너스]</div>
+        <div class="result-item">보너스 RAM 금액: <span class="highlight">${initialBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyBonusNowInit.toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 이자: <span class="highlight">${totalBonusInterestInit.toFixed(2)}</span> USDT</div>
+      </div>
+
+      <div class="result-section main-box">
+        <div class="result-title">[재예치 상품 - 메인(합산)]</div>
+        <div class="result-item">재예치 누적 금액: <span class="highlight">${reinvestedPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyMainNowRe.toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 이자: <span class="highlight">${totalMainInterestRe.toFixed(2)}</span> USDT</div>
+      </div>
+
+      <div class="result-section bonus-box">
+        <div class="result-title">[재예치 상품 - 보너스(합산)]</div>
+        <div class="result-item">보너스 RAM 금액: <span class="highlight">${reinvestedBonusPrincipal.toFixed(2)}</span> USDT</div>
+        <div class="result-item">오늘 1일 이자: <span class="highlight">${dailyBonusNowRe.toFixed(2)}</span> USDT</div>
+        <div class="result-item">누적 이자: <span class="highlight">${totalBonusInterestRe.toFixed(2)}</span> USDT</div>
+      </div>
+    `;
+
+    // 타임라인
     const timelineControls = `
       <div class="actions">
         <button id="btnTlCollapse" type="button">모두 접기</button>
         <button id="btnTlExpand" type="button">모두 펼치기</button>
       </div>
     `;
-
     const timelineHtml = timeline.length === 0
       ? `<div class="tl-item"><div class="tl-body">임계치(${threshold} USDT)에 도달하지 않아 재예치가 발생하지 않았습니다.</div></div>`
       : timeline.map(t => `
@@ -550,42 +578,32 @@
           </div>
         `).join('');
 
-    const resultHtml = `
-      <div class="result-section main-box">
-        <div class="result-title">[처음 가입한 상품]</div>
-        <div class="result-item">가입일: <span class="highlight">${initSubscribeDate.toISOString().slice(0,10)}</span></div>
-        <div class="result-item">금액/기간: <span class="highlight">${initialPrincipal.toFixed(2)} USDT / ${initDays}일</span></div>
-        <div class="result-item">프로모션: <span class="highlight">${initPromo ? '적용' : '미적용'}</span></div>
-      </div>
-
-      <div class="result-section bonus-box">
-        <div class="result-title">[보너스 RAM (처음 상품 기준)]</div>
-        <div class="result-item">보너스 RAM 금액: <span class="highlight">${initialBonusPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">보너스 이자는 D+2~최대 2400일까지 단리로 지급</div>
-      </div>
-
+    const rightColHtml = `
       <div class="timeline">
         <div class="tl-title">재예치 타임라인 (임계치 ${threshold} USDT 도달 시 가입)</div>
         ${timeline.length ? timelineControls : ''}
         ${timelineHtml}
       </div>
-
-      <div class="result-section total-box">
-        <div class="result-title">[스냅샷 & 총 합계]</div>
+      <div class="result-section total-box" style="margin-top:16px;">
+        <div class="result-title">[요약]</div>
         <div class="result-item">시뮬레이션 기간: <span class="highlight">${horizon}</span>일 (${startDate.toISOString().slice(0,10)} ~ ${endDate.toISOString().slice(0,10)})</div>
-        <div class="result-item">현재 기준 1일 총 이자(메인+보너스): <span class="highlight">${dailyNow.toFixed(2)}</span> USDT</div>
-        <div class="result-item">누적 이자(메인/보너스): <span class="highlight">${totalMainInterest.toFixed(2)} / ${totalBonusInterest.toFixed(2)}</span> USDT</div>
-        <div class="result-item">초기 투자 / 재예치 누적: <span class="highlight">${initialPrincipal.toFixed(2)} / ${reinvestedPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">보너스 RAM(초기/재예치 합계): <span class="highlight">${totalBonusPrincipal.toFixed(2)}</span> USDT</div>
-        <div class="result-item">지갑(미재예치 이자) 잔액: <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
+        <div class="result-item">현재 1일 총 이자(초기+재예치, 메인+보너스): <span class="highlight">${(dailyMainNowInit+dailyMainNowRe+dailyBonusNowInit+dailyBonusNowRe).toFixed(2)}</span> USDT</div>
         <div class="result-item">활성 포지션 수(메인 기준): <span class="highlight">${activeMainPositions}</span> 개</div>
+        <div class="result-item">지갑(미재예치 이자) 잔액: <span class="highlight">${wallet.toFixed(2)}</span> USDT</div>
+      </div>
+    `;
+
+    const resultHtml = `
+      <div class="compound-grid">
+        <div class="compound-left">${leftGridHtml}</div>
+        <div class="compound-right">${rightColHtml}</div>
       </div>
     `;
 
     const resultDivEl = document.getElementById("resultCompound");
     resultDivEl.innerHTML = resultHtml;
 
-    // 모두 접기/펼치기 핸들러
+    // 타임라인 모두 접기/펼치기
     const btnCol = document.getElementById('btnTlCollapse');
     const btnExp = document.getElementById('btnTlExpand');
     if (btnCol) btnCol.addEventListener('click', () => {
@@ -596,7 +614,7 @@
     });
   };
 
-  // ============== CPI (간단 버전) ==============
+  /* ===== CPI (간단) — 그대로 유지 ===== */
   window.calculateCpiGrowth = function() {
     const initialInvest = parseFloat(document.getElementById("initialInvest").value) || 0;
     const iMonth = document.getElementById("cpiInitialMonth").value, iDay = document.getElementById("cpiInitialDay").value;
